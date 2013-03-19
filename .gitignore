@@ -162,5 +162,10 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
-assets/*
+# Too large binary files
+assets/*.png
+assets/*.gif
+assets/*.rna
+assets/ScrShots/*.png
 assets/sounds/*/*
+*.zip
