@@ -1,0 +1,14 @@
+package 
+{
+	
+	/**
+	 * ...
+	 * @author Christopher Phonis-Phine
+	 */
+	public class Loaded	{
+		
+		public static var loaded:Array = new Array();
+		
+	}
+	
+}
