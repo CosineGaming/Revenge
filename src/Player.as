@@ -66,7 +66,7 @@ package	{
 		
 		public static var money:Number = 500;
 		
-		public static var items:Array = [0, 0];
+		public static var items:Array = [0, 0, 0, 0, 0];
 		
 		public static var statX:Number;
 		public static var statY:Number;

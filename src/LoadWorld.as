@@ -1,5 +1,6 @@
 package 
 {
+	import flash.events.Event;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.World;
@@ -29,17 +30,26 @@ package
 			add(new text("Tip: " + tips[h.Random(tips.length) + 1], 50, 300, 20, null, createTip, 24));
 		}
 		
-		private function loadOnlineDocs()	{
+		private function addToLoaded(sound:Event)	{
+			
+		}
+		
+		private function load(path:String)	{
 			
 			Security.allowDomain("*");
 			Security.allowInsecureDomain("*");
 			
 			var loc:URLRequest = new URLRequest("http://www.cosinegaming.com/Revenge/resources/" + path);
 			var soundNew:Sound = new Sound();
-			trace("Trying to play " + loc.url);
 			
-			soundNew.addEventListener(Event.COMPLETE, playTheSound);
+			soundNew.addEventListener(Event.COMPLETE, addToLoaded);
 			soundNew.load(loc);
+			
+		}
+		
+		private function loadOnlineDocs()	{
+			
+			
 			
 		}
 		
