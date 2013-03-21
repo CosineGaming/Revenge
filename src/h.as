@@ -81,13 +81,26 @@ package
 			
 		}
 		
-		public static function play(sound:Sfx):void	{
+		public static function play(soundPath:String):void	{
 			
 			if (currSound != null)	currSound.stop();
 			
-			sound.loop();
+			var sound:Sfx = Loaded.loaded[soundPath];
 			
-			currSound = sound;
+			if (sound == null)	{
+				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
+				LoadWorld.toLoad = [soundPath];
+				FP.world = new LoadWorld(FP.world);
+				sound = Loaded.loaded[soundPath];
+			}
+			
+			if (sound)	{
+				sound.loop();
+				currSound = sound;
+			}
+			else	{
+				FP.world.add(new text("Oops... there seems to be a problem with the sound. Sorry!", 10, 10, 3));
+			}
 			
 		}
 		

@@ -7,7 +7,7 @@ package
 	 */
 	public class Loaded	{
 		
-		public static var loaded:Array = new Array();
+		public static var loaded:Object = new Object();
 		
 	}
 	

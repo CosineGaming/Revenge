@@ -14,7 +14,7 @@ package
 		
 		private var Rect:Rectangle = new Rectangle(0, 0, 0, 30);
 		private var Bar:Image = new Image(BAR);
-		private var count:Number = 0;
+		public static var complete:Boolean = false;
 		
 		public function LoadBar()	{
 			
@@ -27,12 +27,9 @@ package
 		
 		override public function update():void	{
 			
-			if (count > 10)	{
-				count = 0;
-				Rect.width = Number(Loaded.loaded.length / LoadWorld.toLoad.length) * 700;
-				Bar.clipRect = Rect;
-			}
-			else	count += 1;
+			Rect.width = Number(Loaded.loaded.length / LoadWorld.toLoad.length) * 700;
+			Bar = new Image(BAR, Rect);
+			if (Loaded.loaded.length == LoadWorld.toLoad.length)	complete = true;
 			
 		}
 		
