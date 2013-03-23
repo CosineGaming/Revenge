@@ -27,9 +27,19 @@ package
 		
 		override public function update():void	{
 			
-			Rect.width = Number(Loaded.loaded.length / LoadWorld.toLoad.length) * 700;
+			Rect.width = Number(numLoaded / LoadWorld.toLoad.length) * 700;
 			Bar = new Image(BAR, Rect);
-			if (Loaded.loaded.length == LoadWorld.toLoad.length)	complete = true;
+			if (numLoaded == LoadWorld.toLoad.length)	complete = true;
+			
+		}
+		
+		private function get numLoaded():Number	{
+			
+			var i:Number = 0;
+			for (var key:String in Loaded.loaded)	{
+				i += 1;
+			}
+			return i;
 			
 		}
 		

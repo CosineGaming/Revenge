@@ -18,9 +18,9 @@ package	{
 		override public function init():void	{
 			
 			trace("Window successfully loaded.");
-			//h.createAd();
 			FP.volume = 0.75;
-			createSplash();
+			h.createAd();
+			//createSplash();
 			
 		}
 		

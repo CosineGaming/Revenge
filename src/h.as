@@ -67,7 +67,7 @@ package
 			MochiAd.showPreGameAd( { clip:Container, id:"613c47c463dbc40f", res:"800x595",
 				background:0xCCCCCC, color:0xFF0000, outline:0x00FF00, no_bg:true,
 				ad_started:function():void {},
-				ad_finished:function():void { var s:Splash = new Splash; FP.world.add(s); s.start(new MenuWorld); }
+				ad_finished:function():void { var s:Splash = new Splash; FP.world.add(s); s.start(new LoadWorld); }
 				}
 			);
 			
@@ -94,7 +94,7 @@ package
 				sound = Loaded.loaded[soundPath];
 			}
 			
-			if (sound)	{
+			if (sound != null)	{
 				sound.loop();
 				currSound = sound;
 			}
