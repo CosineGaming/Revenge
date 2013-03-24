@@ -4,6 +4,7 @@ package
 	import flash.events.Event;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
+	import flash.utils.setTimeout;
 	import mochi.as3.*;
 	import net.flashpunk.FP;
 	import net.flashpunk.Sfx;
@@ -83,6 +84,25 @@ package
 		
 		public static function play(soundPath:String):void	{
 			
+			if (currSound != null)	
+			
+			var sound:Sfx = Loaded.loaded[soundPath];
+			
+			if (sound == null)	{
+				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
+				LoadWorld.toLoad = [soundPath];
+				FP.world = new LoadWorld(FP.world);
+			}
+			else	{
+				currSound.stop();
+				currSound = sound;
+				sound.loop();
+			}
+			
+		}
+		
+		public static function getSound(soundPath:String):Sfx	{
+			
 			if (currSound != null)	currSound.stop();
 			
 			var sound:Sfx = Loaded.loaded[soundPath];
@@ -91,16 +111,24 @@ package
 				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
 				LoadWorld.toLoad = [soundPath];
 				FP.world = new LoadWorld(FP.world);
-				sound = Loaded.loaded[soundPath];
-			}
-			
-			if (sound != null)	{
-				sound.loop();
-				currSound = sound;
+				FP.world.add(new text("Oops... there seems to be a problem with the sound. Sorry!", 10, 10, 3));
+				var complete:Boolean = false;
+				function finish():void	{ complete = true; }
+				setTimeout(finish, 7000);
+				while (Loaded.loaded[soundPath] == null && !complete)	{ }
+				if (Loaded.loaded[soundPath])	return Loaded.loaded[soundPath];
+				else	return null;
 			}
 			else	{
-				FP.world.add(new text("Oops... there seems to be a problem with the sound. Sorry!", 10, 10, 3));
+				currSound = sound;
+				return sound;
 			}
+			
+		}
+		
+		public static function getRand(type:String, numPoss:Number):Sfx	{
+			
+			return getSound(type + "/" + String(Random(1, numPoss + 1)) + ".mp3");
 			
 		}
 		

@@ -43,7 +43,6 @@ package
 			
 			return function(sound:Event):void	{
 				
-				trace("In adxToLoaded function");
 				var theSound:Sound = sound.target as Sound;
 				Loaded.loaded[soundName] = new Sfx(theSound);
 				
@@ -53,7 +52,6 @@ package
 		
 		private function load(path:String):void	{
 			
-			trace("http://www.cosinegaming.com/Revenge/resources/" + path);
 			var loc:URLRequest = new URLRequest("http://www.cosinegaming.com/Revenge/resources/" + path);
 			var soundNew:Sound = new Sound();
 			
@@ -79,10 +77,7 @@ package
 				
 				if (goto == null)	FP.world = new MenuWorld;
 				
-				else	{
-					trace("going to argumented world, hpepejfully");
-					FP.world = goto;
-				}
+				else	FP.world = goto;
 				
 			}
 			

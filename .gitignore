@@ -167,5 +167,5 @@ assets/*.png
 assets/*.gif
 assets/*.rna
 assets/ScrShots/*.png
-assets/sounds/*/*
+sounds/*/*
 *.zip

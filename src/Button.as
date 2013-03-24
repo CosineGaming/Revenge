@@ -14,7 +14,6 @@ package	{
 	public class Button extends Entity	{
 		
 		[Embed(source = "../assets/Blank.png")] private const BLANK:Class;
-		[Embed(source = "/../assets/sounds/other/MenuClick.mp3")] private const CLICK:Class;
 		
 		private var hit:Function;
 		private var mouseOver:Function;
@@ -50,11 +49,11 @@ package	{
 			
 			if (mouse.collideWith(this, mouse.x, mouse.y))	{
 				if (Input.mousePressed && hit != null) {
+					hit();
 					if (sound)	{
-						var click:Sfx = new Sfx(CLICK);
+						var click:Sfx = h.getSound("other/MenuClick.mp3");
 						click.play();
 					}
-					hit();
 				}
 				else if (mouseOver != null)	mouseOver();
 			}
