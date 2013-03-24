@@ -111,13 +111,7 @@ package
 				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
 				LoadWorld.toLoad = [soundPath];
 				FP.world = new LoadWorld(FP.world);
-				FP.world.add(new text("Oops... there seems to be a problem with the sound. Sorry!", 10, 10, 3));
-				var complete:Boolean = false;
-				function finish():void	{ complete = true; }
-				setTimeout(finish, 7000);
-				while (Loaded.loaded[soundPath] == null && !complete)	{ }
-				if (Loaded.loaded[soundPath])	return Loaded.loaded[soundPath];
-				else	return null;
+				return null;
 			}
 			else	{
 				currSound = sound;
