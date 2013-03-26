@@ -67,8 +67,8 @@ package	{
 			
 			graphic = new Image(GUI);
 			
-			if (village)	ITEMCOSTS = [h.Random(40, 60), h.Random(40, 60)];
-			else	ITEMCOSTS = [50, 50];
+			if (village)	ITEMCOSTS = [h.Random(0, 200), h.Random(0, 200)];
+			else	ITEMCOSTS = [100, 100];
 			
 			whenDone = goto;
 			

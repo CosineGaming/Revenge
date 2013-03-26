@@ -33,7 +33,7 @@ package	{
 				var column:Number = h.Random(0, 80);
 				var row:Number = h.Random(0, 60);
 				var tile:Number;
-				if (column > 2 && column < 78 && row > 2 && row < 58)	tile = h.Random(2, 5);
+				if (column > 2 && column < 77 && row > 2 && row < 57)	tile = h.Random(2, 5);
 				else	tile = h.Random(2, 6);
 				tilemap.setTile(column, row, tile);
 			}

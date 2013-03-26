@@ -38,7 +38,11 @@ package	{
 		}
 		
 		private function newGame():void	{
-			FP.world = new ShopWorld;
+			var loadObj:SharedObject = SharedObject.getLocal("RevengeSave");
+			if (loadObj.data.exists)	{
+				FP.world = new DecisionWorld("It appears that you have a saved game. Would you like to continue that?\nIf you don't, when you save your game it will overwrite your old game.", ["No, I would like to start a new game.", "Yes, I would like to continue my saved game."], [function ():void	{ FP.world = new ShopWorld; }, loadGame]);
+			}
+			else	FP.world = new ShopWorld;
 		}
 		
 		private function loadGame():void	{
