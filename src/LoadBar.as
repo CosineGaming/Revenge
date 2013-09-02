@@ -14,7 +14,6 @@ package
 		
 		private var Rect:Rectangle = new Rectangle(0, 0, 0, 30);
 		private var Bar:Image = new Image(BAR);
-		public static var complete:Boolean = false;
 		
 		public function LoadBar()	{
 			
@@ -27,9 +26,8 @@ package
 		
 		override public function update():void	{
 			
-			Rect.width = Number(numLoaded / LoadWorld.toLoad.length) * 700;
+			Rect.width = Number((numLoaded + 0.0) / LoadWorld.toLoad.length) * 700.0;
 			Bar = new Image(BAR, Rect);
-			if (numLoaded == LoadWorld.toLoad.length)	complete = true;
 			
 		}
 		

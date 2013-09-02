@@ -9,6 +9,8 @@ package	{
 	
 	public class Main extends Engine	{
 		
+		private var loadWorld:LoadWorld = new LoadWorld(new MenuWorld);
+		
 		public function Main()	{
 			
 			super(800, 595, 40);
@@ -18,6 +20,8 @@ package	{
 		override public function init():void	{
 			
 			trace("Window successfully loaded.");
+			loadWorld.Load(60000);
+			FP.world = new World;
 			FP.volume = 0.75;
 			//h.createAd();
 			createSplash();
@@ -28,7 +32,7 @@ package	{
 			
 			var s:Splash = new Splash;
 			FP.world.add(s);
-			s.start(new LoadWorld);
+			s.start(loadWorld);
 			
 		}
 		

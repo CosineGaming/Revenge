@@ -29,6 +29,18 @@ package	{
 			
 			tilemap.setRect(0, 0, 80, 60, 0);
 			
+			var already:Array = [-1, -1]
+			
+			for (var i:Number = 0; i < 2400; i++)	{
+				var column:Number = -1;
+				var row:Number = -1;
+				while ([column, row] in already)	{
+					column = h.Random(0, 80);
+					row = h.Random(0, 60);
+				}
+				tilemap.setTile(column, row, 6);
+			}
+			
 			for (var i:Number = 0; i < h.Random(1000 * Player.luck); i++)	{
 				var column:Number = h.Random(0, 80);
 				var row:Number = h.Random(0, 60);

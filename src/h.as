@@ -76,53 +76,45 @@ package
 		
 		public static var currSound:Sfx;
 		
-		public static function playRand(type:String, numPoss:Number):void	{
+		public static function playRand(type:String, numPoss:Number, loop:Boolean=false, display:Boolean=false):void	{
 			
-			play(type + "/" + String(Random(1, numPoss + 1)) + ".mp3");
+			play(type + "/" + String(Random(1, numPoss + 1)) + ".mp3", loop, display);
 			
 		}
 		
-		public static function play(soundPath:String):void	{
-			
-			if (currSound != null)	
+		public static function play(soundPath:String, loop:Boolean=false, display:Boolean=false):void	{
 			
 			var sound:Sfx = Loaded.loaded[soundPath];
 			
 			if (sound == null)	{
-				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
 				LoadWorld.toLoad = [soundPath];
-				FP.world = new LoadWorld(FP.world);
+				var load:LoadWorld;
+				if (display)	{
+					load = new LoadWorld(FP.world);
+					FP.world = load;
+				}
+				else	{
+					var goto:Function = function ():void	{ play (soundPath, loop, display); }
+					load = new LoadWorld(null, goto);
+				}
+				load.Load();
 			}
 			else	{
-				currSound.stop();
-				currSound = sound;
-				sound.loop();
+				var fader:SfxFader;
+				if (currSound)	{
+					fader = new SfxFader(currSound);
+					fader.crossFade(sound, loop, 1);
+					//currSound = sound;
+				}
+				else 	{
+					sound.volume = 0;
+					if (loop)	sound.loop();
+					else	sound.play();
+					fader = new SfxFader(sound);
+					fader.fadeTo(1, 1);
+					currSound = sound;
+				}
 			}
-			
-		}
-		
-		public static function getSound(soundPath:String):Sfx	{
-			
-			if (currSound != null)	currSound.stop();
-			
-			var sound:Sfx = Loaded.loaded[soundPath];
-			
-			if (sound == null)	{
-				LoadWorld.tips = ["Loading unseen file " + soundPath + "."];
-				LoadWorld.toLoad = [soundPath];
-				FP.world = new LoadWorld(FP.world);
-				return null;
-			}
-			else	{
-				currSound = sound;
-				return sound;
-			}
-			
-		}
-		
-		public static function getRand(type:String, numPoss:Number):Sfx	{
-			
-			return getSound(type + "/" + String(Random(1, numPoss + 1)) + ".mp3");
 			
 		}
 		

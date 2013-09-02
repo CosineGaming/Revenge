@@ -1,5 +1,6 @@
 package 
 {
+	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.media.Sound;
 	import flash.utils.clearTimeout;
@@ -27,24 +28,31 @@ package
 		
 		private var goto:World;
 		
-		private var origNumLoaded:Number = 0;
+		private var gotoFunction:Function
 		
 		private var timeoutID:Number;
 		
-		public function LoadWorld(_goto:World = null)	{
+		private var display:text;
+		
+		public function LoadWorld(_goto:World = null, _gotoFunction:Function = null)	{
 			
 			goto = _goto;
-			origNumLoaded = numLoaded;
+			gotoFunction = _gotoFunction;
 			add(new Entity(0, 0, new Image(LOAD)));
 			add(new LoadBar());
-			timeoutID = setTimeout(finish, 30000);
 			createTip();
-			loadOnlineDocs();
-			
+			add(display);
+		}
+		
+		public function Load(timeout:Number=20000):void	{
+			Security.allowDomain("*");
+			Security.allowInsecureDomain("*");
+			timeoutID = setTimeout(finish, timeout);
+			load();
 		}
 		
 		private function createTip():void	{
-			add(new text(tips[h.Random(tips.length)], 25, 300, 20, null, createTip, 18));
+			add(new text(tips[h.Random(tips.length)], 25, 300, 5, null, createTip, 18));
 		}
 		
 		private function addToLoaded(soundName:String):Function	{
@@ -53,57 +61,41 @@ package
 				
 				var theSound:Sound = sound.target as Sound;
 				Loaded.loaded[soundName] = new Sfx(theSound);
+				if (0 != toLoad.length)
+					load();
+				else
+					finish();
 				
 			};
 			
 		}
 		
-		private function load(path:String):void	{
+		private function load():void	{
+			
+			var path:String = toLoad.pop();
 			
 			var loc:URLRequest = new URLRequest("http://www.cosinegaming.com/Revenge/resources/" + path);
 			var soundNew:Sound = new Sound();
 			
 			soundNew.addEventListener(Event.COMPLETE, addToLoaded(path));
 			soundNew.load(loc);
+			displayLoading(path);
 			
 		}
 		
-		private function loadOnlineDocs():void	{
-			
-			Security.allowDomain("*");
-			Security.allowInsecureDomain("*");
-			
-			for (var i:Number = 0; i < toLoad.length; i++)	{
-				load(toLoad[i]);
-			}
-			
+		private function displayLoading (path:String):void	{
+			remove(display)
+			display = new text(path, 25, 350);
+			add(display);
 		}
 		
 		private function finish():void	{
 			
 			clearTimeout(timeoutID);
 			
-			if (goto == null)	FP.world = new MenuWorld;
+			if (new Boolean(gotoFunction))	gotoFunction();
 			
-			else	FP.world = goto;
-			
-		}
-		
-		override public function update():void	{
-			
-			if (toLoad.length == numLoaded)	finish();
-			
-			super.render();
-			
-		}
-		
-		private function get numLoaded():Number	{
-			
-			var i:Number = 0;
-			for (var key:String in Loaded.loaded)	{
-				i += 1;
-			}
-			return i - origNumLoaded;
+			if (goto)	FP.world = goto;
 			
 		}
 		

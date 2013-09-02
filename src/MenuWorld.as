@@ -19,14 +19,7 @@ package	{
 		}
 		
 		override public function begin():void	{
-			
-			var sound:Sfx = h.getRand("menus", 3);
-			sound.volume = 0;
-			sound.loop();
-			var soundFader:Fader = new Fader;
-			soundFader.fadeTo(0.75, 5);
-			soundFader.start();
-			
+			h.playRand("menus", 3);
 		}
 		
 	}
