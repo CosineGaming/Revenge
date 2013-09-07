@@ -104,7 +104,6 @@ package
 				if (currSound)	{
 					fader = new SfxFader(currSound);
 					fader.crossFade(sound, loop, 1);
-					//currSound = sound;
 				}
 				else 	{
 					sound.volume = 0;

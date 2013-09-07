@@ -1,4 +1,5 @@
 package	{
+	import adobe.utils.CustomActions;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.*;
 	import net.flashpunk.utils.*;
@@ -68,8 +69,14 @@ package	{
 		
 		public static var items:Array = [0, 0, 0, 0, 0];
 		
-		public static var statX:Number;
-		public static var statY:Number;
+		public static var statX:Number = 0;
+		public static var statY:Number = 0;
+		
+		private var lastClickX:Number = 0;
+		private var lastClickY:Number = 0;
+		private var lastClickDeltaX:Number = 0;
+		private var lastClickDeltaY:Number = 0;
+		private var mouse:Boolean = false;
 		
 		public function Player(INx:Number=370, INy:Number=550)	{
 			
@@ -128,9 +135,28 @@ package	{
 				PlayerSM.play("horizontalWalk", ((PlayerSM.index + 1) % 5 == 0));
 				vert = false;
 			}
-			if (Input.released(Key.ANY))	{
+			if (Input.mouseDown)	{
+				lastClickX = FP.world.mouseX - 30;
+				lastClickY = FP.world.mouseY - 30;
+				lastClickDeltaX = lastClickX - _x;
+				lastClickDeltaY = lastClickY - _y;
+				PlayerSM.play("horizontalWalk", ((PlayerSM.index + 1) % 5 == 0));
+				vert = false;
+				mouse = true;
+			}
+			if (mouse)	{
+				var distance:Number = Math.sqrt(lastClickDeltaX * lastClickDeltaX + lastClickDeltaY * lastClickDeltaY);
+				_x += lastClickDeltaX / distance * SPEED;
+				_y += lastClickDeltaY / distance * SPEED;
+				if (Math.abs (_x - lastClickX) < SPEED && Math.abs (_y - lastClickY) < SPEED)	{
+					mouse = false;
+					lastClickX = -1;
+				}
+			}
+			if (Input.released(Key.ANY) || (!mouse && lastClickX == -1))	{
 				if (vert) PlayerSM.play("verticalStand", true);
 				else PlayerSM.play("horizontalStand", true);
+				mouse = false;
 			}
 			
 			if (x != _x || y != _y)	{ // If we are trying to move
@@ -165,60 +191,6 @@ package	{
 						
 						if (!oldcollided)	{
 							
-							// One time hits
-							if (hit == "WildekGround" || hit == "DungeonikeGround")	{
-								
-								x = _x; // Still move
-								y = _y;
-								
-								var column:int = (x + 20) / 100; // To get type of collision on ground
-								var row:int = (y + 20) / 100;
-								var tile:int;
-								if (hit == "WildekGround")	tile = WildekGround.tilemap.getTile(column, row);
-								else	tile = DungeonikeGround.tilemap.getTile(column, row);
-								if (tile == 0)	{
-									column = (x + 41) / 100;
-									row = (y + 41) / 100;
-									if (hit == "WildekGround")	tile = WildekGround.tilemap.getTile(column, row);
-									else	tile = DungeonikeGround.tilemap.getTile(column, row);
-								}
-								
-								if (tile == 1)	{
-									if (hit == "WildekGround")	FP.world = new ShopWorld(370, 0);
-									else	FP.world = new ShopWorld(370, 535);
-								}
-								else if (tile == 2)	{
-									if (h.Random(4 * luck) == 1)	{
-										FP.world.add(new text("Whatcha doin' on my orb grass?", x, y + 25, 1, null, battle));
-									}
-									var upgradeVal:Number = h.Random(4 * luck);
-									var upgradeIndex:Number = h.Random(2);
-									increaseUpgrade(upgradeIndex, upgradeVal);
-									FP.world.add(new text(["Weapon", "Magic"][upgradeIndex] + " upgraded by " + String(upgradeVal) + " to " + String(upgrades[upgradeIndex]), x, y, 1));
-								}
-								else if (tile == 3)	{
-									FP.world.add(new text("Grrr...", x, y, 1, null, battle));
-								}
-								else if (tile == 4)	{
-									var moneyVal:Number = h.Random(150 * Player.luck);
-									money += moneyVal;
-									FP.world.add(new text(String(moneyVal) + " GP added\n" + String(money) + " GP Total", x, y, 1));
-								}
-								else if (tile == 5)	{
-									var gotoWorld:World = FP.world;
-									var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
-										["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
-										[function():void	{ FP.world = new BattleWorld(gotoWorld, 0) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1) } ]
-									);
-									FP.world = new DecisionWorld("What are your intentions?", 
-										["I wish to trade and make peace.", "I wish to see your downfall"], 
-										[function():void {	FP.world = new VillageWorld(gotoWorld);	}, function():void { FP.world = downfallWorld } ]);
-								}
-								if (hit == "WildekGround")	WildekGround.tilemap.setTile(column, row, 0);
-								else	DungeonikeGround.tilemap.setTile(column, row, 0);
-								
-							}
-							
 							if (hit == "Civilian")	{
 								var outcries:Array = ["Hey!", "Watch it!", "You gotta problem?", "How can I help you?", "Hello.", 
 									"Hey, cutie, let's go have sex in the wilds!", "Can you move, please?", "Excuse me.", "The eyes. THE EYES!",
@@ -227,9 +199,9 @@ package	{
 									"Dinner on Monday?", "Oh, sorry.", "I'm SO sorry for that.", "Do you need a towel?", "Do you have problems?",
 									"DUDE!", "*!&@#^!@&*$^*&!@#^*!&$^!", "@#&$", "!@$%", "@&^!*&@^#!@&#^&!@#!@*#&^*!@#&^!*@#&^!@*#&^!^@#*&!@^#*&!@^#*&!@#^*!&@#^*!&@#^",
 									"You look sad. You need something?", "TAKE THIS!", "You want this?", "Money for the rich? :)", "That's a mighty scar you got there!\nDo tell...",
-									"I once was a traveler like you,\n but then I took an arrow, to the knee.", "Adventurers, Pff...",
+									"I once was an adventurer like you,\n but then I took an arrow, to the knee.", "Adventurers, Pff...",
 									"Go find something better to do with your life.", "Also try Minecraft!", ".\n..\n...\n....\n.....\n......",
-									"* No Comment *", "", "", "", "", "", "", "", 
+									"* No Comment *", " ", " ", " ", " ", " ", " ", " ", 
 									// Usefuls (5):
 									"I've heard that if you travel North at Wildek,\nyou'll find a Wizard who'll tell you anything.",
 									"I've heard if you travel South at Wildek,\nyou'll find an evil goblin who can't be defeated.",
@@ -253,11 +225,61 @@ package	{
 						
 						}
 						
-						if (hit == "WildekGround" || hit == "DungeonikeGround")	{ // Still move
-							x = _x;
+						// One time hits
+						if (hit == "WildekGround" || hit == "DungeonikeGround")	{
+							
+							x = _x; // Still move
 							y = _y;
 							FP.world.camera.x = x - 370;
 							FP.world.camera.y = y - 267;
+							
+							var column:int = (x + 20) / 100; // To get type of collision on ground
+							var row:int = (y + 20) / 100;
+							var tile:int;
+							if (hit == "WildekGround")	tile = WildekGround.tilemap.getTile(column, row);
+							else	tile = DungeonikeGround.tilemap.getTile(column, row);
+							if (tile == 0)	{
+								column = (x + 41) / 100;
+								row = (y + 41) / 100;
+								if (hit == "WildekGround")	tile = WildekGround.tilemap.getTile(column, row);
+								else	tile = DungeonikeGround.tilemap.getTile(column, row);
+							}
+							
+							if (tile == 1)	{
+								if (hit == "WildekGround")	FP.world = new ShopWorld(370, 0);
+								else	FP.world = new ShopWorld(370, 535);
+							}
+							else if (tile == 2)	{
+								if (h.Random(4 * luck) == 1)	{
+									FP.world.add(new text("Whatcha doin' on my orb grass?", x, y + 25, 1, null, battle));
+								}
+								var upgradeVal:Number = h.Random(4 * luck);
+								var upgradeIndex:Number = h.Random(2);
+								increaseUpgrade(upgradeIndex, upgradeVal);
+								FP.world.add(new text(["Weapon", "Magic"][upgradeIndex] + " upgraded by " + String(upgradeVal) + " to " + String(upgrades[upgradeIndex]), x, y, 1));
+							}
+							else if (tile == 3)	{
+								FP.world.add(new text("Grrr...", x, y, 1, null, battle));
+							}
+							else if (tile == 4)	{
+								var moneyVal:Number = h.Random(150 * Player.luck);
+								money += moneyVal;
+								FP.world.add(new text(String(moneyVal) + " GP added\n" + String(money) + " GP Total", x, y, 1));
+							}
+							else if (tile == 5)	{
+								var gotoWorld:World = FP.world;
+								var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
+									["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
+									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1) } ]
+								);
+								FP.world = new DecisionWorld("What are your intentions?", 
+									["I wish to trade and make peace.", "I wish to see your downfall"], 
+									[function():void {	FP.world = new VillageWorld(gotoWorld);	}, function():void { FP.world = downfallWorld } ]);
+							}
+							
+							if (hit == "WildekGround")	WildekGround.tilemap.setTile(column, row, 0);
+							else	DungeonikeGround.tilemap.setTile(column, row, 0);
+							
 						}
 						
 					}
