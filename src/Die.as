@@ -22,6 +22,7 @@ package	{
 		public static var LevelType:Number;
 		public static var PlayerTotal:Number = 0;
 		public static var EnemyTotal:Number = 0;
+		public static var StakesMultiplier:Number = 1;
 		
 		private var small:Boolean;
 		private var dispText:Boolean;
@@ -31,7 +32,7 @@ package	{
 		
 		private var dieValue:Number = -1;
 		
-		public function Die(storeWorld:World, _small:Boolean = false, _x:Number = 325, _y:Number = 225, isEnemy:Boolean = false, level:Number = 0)	{
+		public function Die(storeWorld:World, _small:Boolean = false, _x:Number = 325, _y:Number = 225, isEnemy:Boolean = false, level:Number = 0, stakesMultiplier:Number = 1)	{
 			
 			x = _x;
 			y = _y;
@@ -46,6 +47,7 @@ package	{
 			enemy = isEnemy;
 			PlayerLevel = Player.upgrades[level];
 			LevelType = level;
+			StakesMultiplier = stakesMultiplier;
 			
 			if (dispText)	toGoTo = h.Random(3, 5);
 			
@@ -95,13 +97,13 @@ package	{
 					
 					if (PlayerTotal >= EnemyTotal)	{
 						var upgradeVal:Number = h.Random(3 * Player.luck);
-						moneyVal = h.Random(500 * (EnemyLevel / PlayerLevel) * Player.luck);
+						moneyVal = h.Random(500 * (EnemyLevel / PlayerLevel) * Player.luck * StakesMultiplier);
 						Player.increaseUpgrade(LevelType, upgradeVal);
 						Player.money += moneyVal;
 						FP.world.add(new text("   You win! " + ["Weapon", "Magic"][LevelType] + " upgraded by " + String(upgradeVal) + " to " + Player.upgrades[LevelType] + "!\nYou won " + String(moneyVal) + " Gold! You now have " + Player.money + " Gold!", 150, 475, 7, gotoWorld, null, 24));
 					}
 					else	{
-						moneyVal = h.Random(500 / Player.luck);
+						moneyVal = h.Random(500 / Player.luck * StakesMultiplier);
 						if (moneyVal > Player.money)	moneyVal = Player.money;
 						Player.money -= moneyVal;
 						FP.world.add(new text("You lose... " + String(moneyVal) + " Gold lost. You now have " + String(Player.money) + " Gold.", 125, 475, 7, gotoWorld, null, 24));

@@ -207,7 +207,7 @@ package	{
 									"I've heard if you travel South at Wildek,\nyou'll find an evil goblin who can't be defeated.",
 									"I've heard if you travel East at Wildek,\n you'll find a jackpot of Gold.", 
 									"I've heard if you travel West at Wildek,\nyou'll find void. Nothing's there.\nSome people say it's the end of the world.",
-									"Poppy talk. It's all poppy talk. Don't believe anything they tell you."];
+									"Poppy talk. It's all poppy talk.\nDon't believe anything they tell you."];
 								var outcryIndex:Number = h.Random(int(outcries.length * 1.75));
 								if (outcryIndex > outcries.length)	{
 									outcryIndex = outcries.length - h.Random(1, 6);
@@ -225,13 +225,7 @@ package	{
 						
 						}
 						
-						// One time hits
 						if (hit == "WildekGround" || hit == "DungeonikeGround")	{
-							
-							x = _x; // Still move
-							y = _y;
-							FP.world.camera.x = x - 370;
-							FP.world.camera.y = y - 267;
 							
 							var column:int = (x + 20) / 100; // To get type of collision on ground
 							var row:int = (y + 20) / 100;
@@ -243,6 +237,13 @@ package	{
 								row = (y + 41) / 100;
 								if (hit == "WildekGround")	tile = WildekGround.tilemap.getTile(column, row);
 								else	tile = DungeonikeGround.tilemap.getTile(column, row);
+							}
+							
+							if (tile < 6)	{
+								x = _x; // Still move
+								y = _y;
+								FP.world.camera.x = x - 370;
+								FP.world.camera.y = y - 267;
 							}
 							
 							if (tile == 1)	{
@@ -270,14 +271,14 @@ package	{
 								var gotoWorld:World = FP.world;
 								var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
 									["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
-									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1) } ]
+									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 3) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 3) } ]
 								);
 								FP.world = new DecisionWorld("What are your intentions?", 
 									["I wish to trade and make peace.", "I wish to see your downfall"], 
 									[function():void {	FP.world = new VillageWorld(gotoWorld);	}, function():void { FP.world = downfallWorld } ]);
 							}
 							
-							if (hit == "WildekGround")	WildekGround.tilemap.setTile(column, row, 0);
+							if (hit == "WildekGround")	{if (tile < 6)	WildekGround.tilemap.setTile(column, row, 0);}
 							else	DungeonikeGround.tilemap.setTile(column, row, 0);
 							
 						}

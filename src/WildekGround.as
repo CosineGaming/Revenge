@@ -29,21 +29,25 @@ package	{
 			
 			tilemap.setRect(0, 0, 80, 60, 0);
 			
-			var already:Array = [-1, -1]
-			
-			for (var i:Number = 0; i < 2400; i++)	{
-				var column:Number = -1;
-				var row:Number = -1;
-				while ([column, row] in already)	{
-					column = h.Random(0, 80);
-					row = h.Random(0, 60);
-				}
-				tilemap.setTile(column, row, 6);
-			}
-			
-			for (var i:Number = 0; i < h.Random(1000 * Player.luck); i++)	{
+			for (var i:Number = 0; i < h.Random(400 * Player.luck); i++)	{
 				var column:Number = h.Random(0, 80);
 				var row:Number = h.Random(0, 60);
+				var mountainRange:Boolean = h.Random(0, 2);
+				if (mountainRange)	{
+					for (var b:Number = 0; b < h.Random(8 * Player.luck); b++)	{
+						tilemap.setTile(column, row, h.Random(6, 8));
+						column += h.Random(-1, 2);
+						row += h.Random(-1, 2);
+					}
+				}
+				else	{
+					tilemap.setTile(column, row, 8);
+				}
+			}
+			
+			for (i = 0; i < h.Random(1000 * Player.luck); i++)	{
+				column = h.Random(0, 80);
+				row = h.Random(0, 60);
 				var tile:Number;
 				if (column > 2 && column < 77 && row > 2 && row < 57)	tile = h.Random(2, 5);
 				else	tile = h.Random(2, 6);
@@ -51,7 +55,7 @@ package	{
 			}
 			tilemap.setTile(40, 30, 1);
 			
-			tilemap.createGrid([1, 2, 3, 4, 5], grid);
+			tilemap.createGrid([1, 2, 3, 4, 5, 6, 7, 8], grid);
 			
 			type = "WildekGround";
 			

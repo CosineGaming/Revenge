@@ -1,0 +1,10 @@
+sword 50 155; 50 187
+magic 155 185; 155 160
+speed 315 185; 315 160
+luckLvl 465 185; 465 160
+familiar 615 185; 615 160
+
+buymetal 15 310; 15 330
+sellmetal 15 460; 15 480
+buywood 165 310; 165 330
+sellwood 165 460; 165 480

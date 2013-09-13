@@ -25,8 +25,8 @@ package {
 			currentWildek = storeWorld;
 			
 			if (Player.familiar > 0)	add(new Die(storeWorld, true, 75, 265));
-			add(new Die(storeWorld, false, 325, 225, false, level));
-			add(new Die(storeWorld, true, 675, 265, true, level * stakes));
+			add(new Die(storeWorld, false, 325, 225, false, level, stakes));
+			add(new Die(storeWorld, true, 675, 265, true, level));
 			
 			if (Player.familiar > 0)	add(new Entity(75, 100, new Image(WOLF)));
 			else	add(new Entity(75, 100, new Image(UK)));
