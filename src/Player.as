@@ -201,14 +201,15 @@ package	{
 									"You look sad. You need something?", "TAKE THIS!", "You want this?", "Money for the rich? :)", "That's a mighty scar you got there!\nDo tell...",
 									"I once was an adventurer like you,\n but then I took an arrow, to the knee.", "Adventurers, Pff...",
 									"Go find something better to do with your life.", "Also try Minecraft!", ".\n..\n...\n....\n.....\n......",
-									"* No Comment *", " ", " ", " ", " ", " ", " ", " ", 
+									"* No Comment *", " ", " ", " ", " ", " ", " ", " ", "How's it going, Dildo Faggins?\nYou OK, Third Leg-less?\nNice to see you Hairyporn.",
+									"Don't go there.", "RAPE!", "You should learn C++.", "Made in Flash with Flashpunk!", "Thanks to Incompetech.com for music!", 
 									// Usefuls (5):
 									"I've heard that if you travel North at Wildek,\nyou'll find a Wizard who'll tell you anything.",
 									"I've heard if you travel South at Wildek,\nyou'll find an evil goblin who can't be defeated.",
 									"I've heard if you travel East at Wildek,\n you'll find a jackpot of Gold.", 
 									"I've heard if you travel West at Wildek,\nyou'll find void. Nothing's there.\nSome people say it's the end of the world.",
 									"Poppy talk. It's all poppy talk.\nDon't believe anything they tell you."];
-								var outcryIndex:Number = h.Random(int(outcries.length * 1.75));
+								var outcryIndex:Number = h.Random(int(outcries.length * 1.15));
 								if (outcryIndex > outcries.length)	{
 									outcryIndex = outcries.length - h.Random(1, 6);
 								}
@@ -300,8 +301,8 @@ package	{
 				
 			}
 			
-			if (FP.world.name == "Dungeonike" && h.Random(120) == 0)	FP.pan = h.Random(-1, 2);
-			else if (FP.pan != 0)	FP.pan -= FP.pan / 25;
+			if (FP.world.name == "Dungeonike" && h.Random(180) == 0)	FP.pan = h.Random(-1, 2);
+			else if (FP.pan != 0)	FP.pan -= FP.pan / 30;
 			
 			statX = x;
 			statY = y;

@@ -27,9 +27,9 @@ package	{
 			graphic = tilemap;
 			mask = grid;
 			
-			tilemap.setRect(0, 0, 80, 60, 0);
+			tilemap.setRect(0, 0, 80, 60, 0); // Grass field
 			
-			for (var i:Number = 0; i < h.Random(400 * Player.luck); i++)	{
+			for (var i:Number = 0; i < h.Random(400 * Player.luck); i++)	{ // Lay Mountain ranges and Lakes randomly throughout Wildek
 				var column:Number = h.Random(0, 80);
 				var row:Number = h.Random(0, 60);
 				var mountainRange:Boolean = h.Random(0, 2);
@@ -45,17 +45,29 @@ package	{
 				}
 			}
 			
-			for (i = 0; i < h.Random(1000 * Player.luck); i++)	{
-				column = h.Random(0, 80);
-				row = h.Random(0, 60);
+			for (i = 0; i < h.Random(1000 * Player.luck); i++)	{ // Add evil orb and gold grass along with villages around the edges
+				column = h.Random(3, 77);
+				row = h.Random(3, 57);
 				var tile:Number;
-				if (column > 2 && column < 77 && row > 2 && row < 57)	tile = h.Random(2, 5);
+				if (column > 5 && column < 74 && row > 5 && row < 54)	tile = h.Random(2, 5);
 				else	tile = h.Random(2, 6);
 				tilemap.setTile(column, row, tile);
 			}
-			tilemap.setTile(40, 30, 1);
+			tilemap.setTile(40, 30, 1); // Add Back to Shop tile
 			
-			tilemap.createGrid([1, 2, 3, 4, 5, 6, 7, 8], grid);
+			var canBeLake:Boolean = h.Random(0, 8) == 0; // Lay Mountains / Lakes preventing exit of Wildek
+			for (i = 3; i < 77; i++)	{
+				tilemap.setTile(i, 3, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+				tilemap.setTile(i, 56, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+			}
+			for (i = 3; i < 57; i++)	{
+				tilemap.setTile(3, i, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+				tilemap.setTile(76, i, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+			}
+			tilemap.setTile(39, 3, 9); // Add Gate out of Wildek
+			tilemap.setTile(40, 3, 9);
+			
+			tilemap.createGrid([1, 2, 3, 4, 5, 6, 7, 8, 9], grid);
 			
 			type = "WildekGround";
 			
