@@ -272,7 +272,7 @@ package	{
 								var gotoWorld:World = FP.world;
 								var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
 									["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
-									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 3) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 3) } ]
+									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 5) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 5) } ]
 								);
 								FP.world = new DecisionWorld("What are your intentions?", 
 									["I wish to trade and make peace.", "I wish to see your downfall"], 
