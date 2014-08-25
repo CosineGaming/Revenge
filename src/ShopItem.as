@@ -138,8 +138,8 @@ package
 				}
 				
 				texts.removeAll();
-				texts.add(new Text(levelString, positions [0], positions [1]));
-				if (addMoney)	texts.add(new Text(ownedString, positions [0], positions [1]));
+				texts.add(new Text(costString, positions [2], positions [3]));
+				if (renderOwned)	texts.add(new Text(ownedString, positions [0], positions [1]));
 				else	texts.add(new Text(levelString, positions [0], positions [1]));
 				
 			}
