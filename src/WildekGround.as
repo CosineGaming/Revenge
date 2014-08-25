@@ -49,7 +49,7 @@ package	{
 				column = h.Random(3, 77);
 				row = h.Random(3, 57);
 				var tile:Number;
-				if (column > 5 && column < 74 && row > 5 && row < 54)	tile = h.Random(2, 5);
+				if (h.Random(0, 10) != 0)	tile = h.Random(2, 5); // Not a village
 				else	tile = h.Random(2, 6);
 				tilemap.setTile(column, row, tile);
 			}

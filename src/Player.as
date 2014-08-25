@@ -261,7 +261,7 @@ package	{
 								FP.world.add(new text(["Weapon", "Magic"][upgradeIndex] + " upgraded by " + String(upgradeVal) + " to " + String(upgrades[upgradeIndex]), x, y, 1));
 							}
 							else if (tile == 3)	{
-								FP.world.add(new text("Grrr...", x, y, 1, null, battle));
+								FP.world.add(new text("Grrr...", x, y, 1, null, hit == "WildekGround" ? battle : battleDungeonike));
 							}
 							else if (tile == 4)	{
 								var moneyVal:Number = h.Random(150 * Player.luck);
@@ -272,7 +272,7 @@ package	{
 								var gotoWorld:World = FP.world;
 								var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
 									["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
-									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 3) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 3) } ]
+									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 5) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 5) } ]
 								);
 								FP.world = new DecisionWorld("What are your intentions?", 
 									["I wish to trade and make peace.", "I wish to see your downfall"], 
@@ -313,9 +313,20 @@ package	{
 			
 			var currWildek:World = FP.world;
 			
-			FP.world = new DecisionWorld("By what means would you like to crush the dreadful monster before you?",
+			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
 				["My Blade (LVL " + String(sword) + ") shall pierce it.", "My Magic skills (LVL " + String(magic) + ") shall destroy it."],
-				[function():void	{ FP.world = new BattleWorld(currWildek, 0) }, function():void	{ FP.world = new BattleWorld(currWildek, 1) } ]
+			[function():void	{ FP.world = new BattleWorld(currWildek, 0) }, function():void	{ FP.world = new BattleWorld(currWildek, 1) } ]
+			);
+			
+		}
+		
+		private function battleDungeonike():void	{
+			
+			var currWildek:World = FP.world;
+			
+			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
+				["My Blade (LVL " + String(sword) + ") shall pierce it.", "My Magic skills (LVL " + String(magic) + ") shall destroy it."],
+			[function():void	{ FP.world = new BattleWorld(currWildek, 0, 10) }, function():void	{ FP.world = new BattleWorld(currWildek, 1, 10) } ]
 			);
 			
 		}

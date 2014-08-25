@@ -87,14 +87,15 @@
 		 */
 		public function update():void
 		{
+			FP._world.updateLists();
+			if (FP._goto) checkWorld();
 			if (FP.tweener.active && FP.tweener._tween) FP.tweener.updateTweens();
 			if (FP._world.active)
 			{
 				if (FP._world._tween) FP._world.updateTweens();
 				FP._world.update();
 			}
-			FP._world.updateLists();
-			if (FP._goto) checkWorld();
+			FP._world.updateLists(false);
 		}
 		
 		/**
@@ -169,6 +170,9 @@
 			// switch worlds
 			if (FP._goto) checkWorld();
 			
+			// game start
+			init();
+			
 			// start game loop
 			_rate = 1000 / FP.assignedFrameRate;
 			if (FP.fixed)
@@ -186,10 +190,6 @@
 				_last = getTimer();
 				addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
-			
-			// Game Start
-			init();	
-			
 		}
 		
 		/** @private Framerate independent game loop. */
