@@ -13,9 +13,16 @@ package	{
 		[Embed(source = "/../assets/WildekGround.png")] private const GROUND:Class;
 		
 		/**
-		 * 0 = Normal Grass
-		 * 1 = Orb Grass
-		 * 2 = Evil Grass
+		 * 0 = Normal
+		 * 1 = Shop
+		 * 2 = Orb
+		 * 3 = Evil
+		 * 4 = Gold
+		 * 5 = Village
+		 * 6 = Mountain 1
+		 * 7 = Mountain 2
+		 * 8 = Lake
+		 * 9 = Gate
 		 */
 		public static var tilemap:Tilemap;
 		public static var grid:Grid = new Grid(8000, 6000, 100, 100, 0, 0);
@@ -49,7 +56,7 @@ package	{
 				column = h.Random(3, 77);
 				row = h.Random(3, 57);
 				var tile:Number;
-				if (h.Random(0, 10) != 0)	tile = h.Random(2, 5); // Not a village
+				if (h.Random(0, 6) != 0)	tile = h.Random(2, 5); // Not a village
 				else	tile = h.Random(2, 6);
 				tilemap.setTile(column, row, tile);
 			}
@@ -65,7 +72,6 @@ package	{
 				tilemap.setTile(76, i, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
 			}
 			tilemap.setTile(39, 3, 9); // Add Gate out of Wildek
-			tilemap.setTile(40, 3, 9);
 			
 			tilemap.createGrid([1, 2, 3, 4, 5, 6, 7, 8, 9], grid);
 			

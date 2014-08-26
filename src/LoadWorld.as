@@ -74,7 +74,7 @@ package
 			
 			var path:String = toLoad.pop();
 			
-			var loc:URLRequest = new URLRequest("http://www.cosinegaming.com/Revenge/resources/" + path);
+			var loc:URLRequest = new URLRequest("http://www.cosinegaming.com/revenge/resources/" + path);
 			var soundNew:Sound = new Sound();
 			
 			soundNew.addEventListener(Event.COMPLETE, addToLoaded(path));

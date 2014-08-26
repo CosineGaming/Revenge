@@ -79,7 +79,9 @@ package
 					FP.world.remove(this);
 				}
 				
-				if (collideWith(this, FP.world.mouseX, FP.world.mouseY))	{
+				if (collidePoint(x, y, FP.world.mouseX, FP.world.mouseY))	{
+					
+					trace(this.x, ", ", this.y);
 					
 					if (Input.check(Key.SHIFT))	{
 						
@@ -126,6 +128,7 @@ package
 							if (Player.money > cost)	{
 								Player.money -= cost;
 								levelFormulaSet (level + 1);
+								trace(level);
 							}
 							else	{
 								FP.world.add(new text("Bud, you don't got the Gold!", 10, 10, 2));

@@ -23,7 +23,6 @@ package	{
 			loadWorld.Load(60000);
 			FP.world = new World;
 			FP.volume = 0.75;
-			//h.createAd();
 			createSplash();
 			
 		}

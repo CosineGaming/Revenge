@@ -21,9 +21,6 @@ package	{
 			
 			graphic = new Image(GUI);
 			
-			if (village)	itemCosts = [h.Random(30, 170), h.Random(30, 170)];
-			else	itemCosts = [100, 100];
-			
 			whenDone = goto;
 			
 			var upgrades:Function = function (index:int):Function	{
@@ -54,6 +51,9 @@ package	{
 					upgradePositions[i][0][0], upgradePositions[i][0][1],
 					upgradePositions[i][1][0], upgradePositions[i][1][1], false));
 			}
+			
+			if (village)	itemCosts = [h.Random(30, 170), h.Random(30, 170)];
+			else	itemCosts = [100, 100];
 			
 			var items:Function = function (index:int):Function	{
 				return function ():Number	{
