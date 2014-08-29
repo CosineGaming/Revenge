@@ -9,35 +9,17 @@ package	{
 	 * @author Christopher Phonis-Phine
 	 */
 	
-	public class ShopGUI extends Entity	{
+	public class ShopGUI extends World	{
 		
 		[Embed(source = "/../assets/ShopGUI.png")] private const GUI:Class;
 		
-		private var itemCosts:Array = [0, 0];
+		private var whenDone:World;
 		
-		private var whenDone:Function = null;
-		
-		public function ShopGUI(village:Boolean = false, goto:Function = null)	{
+		public function ShopGUI(goto:World, village:Boolean = false)	{
 			
-			graphic = new Image(GUI);
+			name = "ShopGUI";
 			
 			whenDone = goto;
-			
-			var upgrades:Function = function (index:int):Function	{
-				return function ():Number	{
-					return Player.upgrades [index];
-				}
-			};
-			
-			var upgradesSet:Function = function (index:int):Function	{
-				return function (value:Number):void	{
-					Player.upgrades [index] = value;
-				}
-			};
-			
-			var upgradeCost:Function = function (level:Number):Number	{
-				return int(Math.pow(level, 2) + 74);
-			};
 			
 			var upgradePositions:Array =
 				[[[50, 155], [50, 187]],
@@ -46,38 +28,23 @@ package	{
 				[[465, 185], [465, 160]],
 				[[615, 185], [615, 160]]];
 			
+			add(new Entity(0, 0, new Image(GUI)));
+			
+			add(new MoneyCounter);
+			
 			for (var i:int = 0; i < 5; i++)	{
-				FP.world.add (new ShopItem (upgrades(i), upgradesSet(i), upgradeCost,
-					upgradePositions[i][0][0], upgradePositions[i][0][1],
-					upgradePositions[i][1][0], upgradePositions[i][1][1], false));
+				add (new ShopItem (upgradePositions[i][0][0], upgradePositions[i][0][1],
+					upgradePositions[i][1][0], upgradePositions[i][1][1], i, false));
 			}
 			
-			if (village)	itemCosts = [h.Random(30, 170), h.Random(30, 170)];
-			else	itemCosts = [100, 100];
-			
-			var items:Function = function (index:int):Function	{
-				return function ():Number	{
-					return Player.items [index];
-				}
-			};
-			
-			var itemsSet:Function = function (index:int):Function	{
-				return function (value:Number):void	{
-					Player.items [index] = value;
-				}
-			};
-			
-			var itemCost:Function = function (index:int):Function	{
-				return function (level:Number):Number	{
-					return itemCosts [index];
-				}
-			};
-			
 			for (i = 0; i < 2; i++)	{
-				FP.world.add (new ShopItem (items(i), itemsSet(i), itemCost(i),
-					i * 150 + 15, 310, i * 150 + 15, 330, true));
-				FP.world.add (new ShopItem (items(i), itemsSet(i), itemCost(i),
-					i * 150 + 15, 460, i * 150 + 15, 480, true, true));
+				var cost:uint = 100;
+				if (village)
+				{
+					cost = h.Random(50, 150);
+				}
+				add (new ShopItem (i * 150 + 15, 310, i * 150 + 15, 330, i, true, false, cost));
+				add (new ShopItem (i * 150 + 15, 460, i * 150 + 15, 480, i, true, true, cost));
 			}
 			
 		}
@@ -90,8 +57,7 @@ package	{
 				var mouseY:int = FP.world.mouseY;
 				
 				if (mouseY >= 560)	{
-					FP.world.remove(this); // Exit
-					if (whenDone != null)	whenDone();
+					FP.world = whenDone;
 				}
 				
 				if (mouseX > 750)	{
@@ -101,10 +67,12 @@ package	{
 					saveObj.data.money = Player.money;
 					saveObj.data.exists = true;
 					saveObj.flush();
-					FP.world.add(new text("Game Saved", 10, 10, 1));
+					add(new text("Game Saved", 10, 10, 1));
 				}
 				
 			}
+			
+			super.update();
 			
 		}
 		

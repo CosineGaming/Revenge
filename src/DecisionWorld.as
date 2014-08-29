@@ -24,8 +24,6 @@ package	{
 		
 		public function DecisionWorld(_AskText:String, _Options:Array, _Consequences:Array)	{
 			
-			h.playRand("menus", 2);
-			
 			var sound:String = String(h.Random(1, 3));
 			
 			AskText = _AskText;

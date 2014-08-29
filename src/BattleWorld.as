@@ -1,4 +1,6 @@
 package {
+	import adobe.utils.ProductManager;
+	import flash.events.StatusEvent;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
@@ -15,28 +17,34 @@ package {
 		
 		private var currentWildek:World;
 		
-		[Embed(source = "/../assets/WolfIcon.png")] private const WOLF:Class;
-		[Embed(source = "/../assets/Unknown.png")] private const UK:Class;
-		[Embed(source = "/../assets/PlayerIcon.png")] private const PI:Class;
-		[Embed(source = "/../assets/Eye.png")] private const EYE:Class;
+		[Embed(source = "/../assets/BattleMagic.png")] private const magicBG:Class;
 		
-		public function BattleWorld(storeWorld:World, level:Number, stakes:Number = 1)	{
+		public function BattleWorld(storeWorld:World, magic:Boolean, enemyLevel:Number = 0)	{
 			
 			currentWildek = storeWorld;
 			
-			if (Player.familiar > 0)	add(new Die(storeWorld, true, 75, 265));
-			add(new Die(storeWorld, false, 325, 225, false, level, stakes));
-			add(new Die(storeWorld, true, 675, 265, true, level));
+			if (magic)
+			{
+				var bg:Entity = new Entity(0, 0, new Image(magicBG), null);
+				bg.layer = 100;
+				add(bg);
+				var player:Object = new Object;
+				var enemy:Object = new Object;
+				player.panel = new MagicPanel(true, enemy);
+				enemy.panel = new MagicPanel(false, player, enemyLevel);
+				add(player.panel);
+				add(enemy.panel);
+				add(new MagicSpells(player.panel));
+				add(new StatMarker(true, true, player.panel, storeWorld));
+				add(new StatMarker(true, false, enemy.panel, storeWorld));
+				add(new StatMarker(false, true, player.panel, storeWorld));
+				add(new StatMarker(false, false, enemy.panel, storeWorld));
+			}
 			
-			if (Player.familiar > 0)	add(new Entity(75, 100, new Image(WOLF)));
-			else	add(new Entity(75, 100, new Image(UK)));
-			add(new Entity(325, 100, new Image(PI)));
-			add(new Entity(675, 100, new Image(EYE)));
+			/*if (Player.familiar > 0)	add(new Die(storeWorld, true, 75, 265));
+			add(new Die(storeWorld, false, 325, 225, false, magic, stakes));
+			add(new Die(storeWorld, true, 675, 265, true, magic));*/
 			
-		}
-		
-		public function goBack():void	{
-			FP.world = currentWildek;
 		}
 		
 		override public function begin():void	{

@@ -19,55 +19,30 @@ package	{
 		private var collisions:Array = ["ShopDesk", "Civilian", "WildekGround", "DungeonikeGround"];
 		private var oldcollided:Boolean = false;
 		
-		public static var sword:Number = 1;
-		public static var magic:Number = 1;
-		public static var speed:Number = 0;
-		public static var luckLvl:Number = 0;
-		public static var familiar:Number = 0;
+		public static var upgrades:Array = [1, 1, 0, 0, 0];
+		
+		public static function get sword():uint { return upgrades[0]; }
+		public static function set sword(value:uint):void { upgrades[0] = value; }
+		
+		public static function get magic():uint { return upgrades[1]; }
+		public static function set magic(value:uint):void { upgrades[1] = value; }
+		
+		public static function get speed():uint { return upgrades[2]; }
+		public static function set speed(value:uint):void { upgrades[2] = value; }
+		
+		public static function get luckLvl():uint { return upgrades[3]; }
+		public static function set luckLvl(value:uint):void { upgrades[3] = value; }
+		
+		public static function get familiar():uint { return upgrades[4]; }
+		public static function set familiar(value:uint):void { upgrades[4] = value; }
+		
 		public static function get luck():Number	{
 			return luckLvl * 0.075 + 1;
 		}
 		
-		public static function get upgrades():Array	{
-			return [sword, magic, speed, luckLvl, familiar];
-		}
-		public static function set upgrades(vals:Array):void	{
-			sword = vals[0];
-			magic = vals[1];
-			speed = vals[2];
-			luckLvl = vals[3];
-			familiar = vals[4];
-		}
-		public static function setUpgrade(upgrade:Number, value:Number):void	{
-			
-			switch (upgrade)	{
-				case 0:
-					sword = value;
-					break;
-				case 1:
-					magic = value;
-					break;
-				case 2:
-					speed = value;
-					break;
-				case 3:
-					luckLvl = value;
-					break;
-				case 4:
-					familiar = value;
-					break;
-			}
-			
-		}
-		public static function increaseUpgrade(upgrade:Number, value:Number):void	{
-			
-			setUpgrade(upgrade, upgrades[upgrade] + value);
-			
-		}
-		
 		public static var money:Number = 500;
 		
-		public static var items:Array = [0, 0, 0, 0, 0];
+		public static var items:Array = [0, 0];
 		
 		public static var statX:Number = 0;
 		public static var statY:Number = 0;
@@ -104,34 +79,34 @@ package	{
 			var _x:Number = x;
 			var _y:Number = y;
 			
-			var SPEED:Number = speed / 2 + 5;
+			var movementSpeed:Number = (speed / 2 + 5) * 40 * FP.elapsed; // Dynamic Framerate
 			
 			if (Input.check(Key.CONTROL) && Input.pressed(Key.DIGIT_4))	{
 				money += 1000;
 			}
 			if (Input.check(Key.TAB))	{
-				SPEED = 3;
+				movementSpeed = 200 * FP.elapsed;
 			}
 			if (Input.check(Key.PAGE_UP))	{
-				SPEED = 15;
+				movementSpeed = 1000 * FP.elapsed;
 			}
 			if (Input.check("Left"))	{
-				_x -= SPEED;
+				_x -= movementSpeed;
 				PlayerSM.play("verticalWalk", ((PlayerSM.index + 1) % 5 == 0)); // Restart if done playing
 				vert = true;
 			}
 			if (Input.check("Right"))	{
-				_x += SPEED;
+				_x += movementSpeed;
 				PlayerSM.play("verticalWalk", ((PlayerSM.index + 1) % 5 == 0));
 				vert = true;
 			}
 			if (Input.check("Up"))	{
-				_y -= SPEED; // Remember, |4th quadrant|? Ah. Oh. Crap. Time to change all my code.... JK.  :D
+				_y -= movementSpeed; // Remember, |4th quadrant|? Ah. Oh. Crap. Time to change all my code.... JK.  :D
 				PlayerSM.play("horizontalWalk", ((PlayerSM.index + 1) % 5 == 0));
 				vert = false;
 			}
 			if (Input.check("Down"))	{
-				_y += SPEED;
+				_y += movementSpeed;
 				PlayerSM.play("horizontalWalk", ((PlayerSM.index + 1) % 5 == 0));
 				vert = false;
 			}
@@ -146,9 +121,9 @@ package	{
 			}
 			if (mouse)	{
 				var distance:Number = Math.sqrt(lastClickDeltaX * lastClickDeltaX + lastClickDeltaY * lastClickDeltaY);
-				_x += lastClickDeltaX / distance * SPEED;
-				_y += lastClickDeltaY / distance * SPEED;
-				if (Math.abs (_x - lastClickX) < SPEED && Math.abs (_y - lastClickY) < SPEED)	{
+				_x += lastClickDeltaX / distance * movementSpeed;
+				_y += lastClickDeltaY / distance * movementSpeed;
+				if (Math.abs (_x - lastClickX) < movementSpeed && Math.abs (_y - lastClickY) < movementSpeed)	{
 					mouse = false;
 					lastClickX = -1;
 				}
@@ -182,6 +157,8 @@ package	{
 				}
 				else	{
 					
+					mouse = false;
+					
 					if (vert) PlayerSM.play("verticalStand", true);
 					else PlayerSM.play("horizontalStand", true);
 					
@@ -201,27 +178,19 @@ package	{
 									"You look sad. You need something?", "TAKE THIS!", "You want this?", "Money for the rich? :)", "That's a mighty scar you got there!\nDo tell...",
 									"I once was an adventurer like you,\n but then I took an arrow, to the knee.", "Adventurers, Pff...",
 									"Go find something better to do with your life.", "Also try Minecraft!", ".\n..\n...\n....\n.....\n......",
-									"* No Comment *", " ", " ", " ", " ", " ", " ", " ", "How's it going, Dildo Faggins?\nYou OK, Third Leg-less?\nNice to see you Hairyporn.",
-									"Don't go there.", "RAPE!", "You should learn C++.", "Made in Flash with Flashpunk!", "Thanks to Incompetech.com for music!", 
-									// Usefuls (5):
-									"I've heard that if you travel North at Wildek,\nyou'll find a Wizard who'll tell you anything.",
-									"I've heard if you travel South at Wildek,\nyou'll find an evil goblin who can't be defeated.",
-									"I've heard if you travel East at Wildek,\n you'll find a jackpot of Gold.", 
-									"I've heard if you travel West at Wildek,\nyou'll find void. Nothing's there.\nSome people say it's the end of the world.",
-									"Poppy talk. It's all poppy talk.\nDon't believe anything they tell you."];
-								var outcryIndex:Number = h.Random(int(outcries.length * 1.15));
-								if (outcryIndex > outcries.length)	{
-									outcryIndex = outcries.length - h.Random(1, 6);
-								}
-								var outcry:String = outcries[outcryIndex];
+									"* No Comment *", " ", "Don't go there.", "RAPE!", "You should learn C++.", "Made in Flash with Flashpunk!",
+									"Thanks to Incompetech.com for music!", "By Cosine Gaming", "Revenge", "Revenge by Cosine Gaming", "Visit cosinegaming.com", "cosinegaming.com",
+									"You should go to cosinegaming.com", "Cosine Gaming makes free indy games.", "Go to cosinegaming.com for more free indy games.",
+									"By Cosine Gaming", "Revenge", "Revenge by Cosine Gaming", "Visit cosinegaming.com", "cosinegaming.com",
+									"You should go to cosinegaming.com", "Cosine Gaming makes free indy games.", "Go to cosinegaming.com for more free indy games."];
+								var outcry:String = outcries[h.Random(outcries.length)]
 								var addGold:Number = h.Random(3);
 								money += addGold;
 								FP.world.add(new text(outcry + "\n" + String(addGold) + " GP Added", x, y, 1));
 							}
 							
 							if (hit == "ShopDesk")	{
-								FP.world.add(new ShopGUI);
-								FP.world.remove(ShopDesk.warnButton);
+								FP.world = new ShopGUI(FP.world);
 							}
 						
 						}
@@ -255,9 +224,9 @@ package	{
 								if (h.Random(4 * luck) == 1)	{
 									FP.world.add(new text("Whatcha doin' on my orb grass?", x, y + 25, 1, null, battle));
 								}
-								var upgradeVal:Number = h.Random(4 * luck);
+								var upgradeVal:Number = h.Random(2 * luck);
 								var upgradeIndex:Number = h.Random(2);
-								increaseUpgrade(upgradeIndex, upgradeVal);
+								upgrades[upgradeIndex] += upgradeVal;
 								FP.world.add(new text(["Weapon", "Magic"][upgradeIndex] + " upgraded by " + String(upgradeVal) + " to " + String(upgrades[upgradeIndex]), x, y, 1));
 							}
 							else if (tile == 3)	{
@@ -276,7 +245,7 @@ package	{
 								);
 								FP.world = new DecisionWorld("What are your intentions?", 
 									["I wish to trade and make peace.", "I wish to see your downfall"], 
-									[function():void {	FP.world = new VillageWorld(gotoWorld);	}, function():void { FP.world = downfallWorld } ]);
+									[function():void {	FP.world = new ShopGUI(gotoWorld, true);	}, function():void { FP.world = downfallWorld } ]);
 							}
 							
 							if (hit == "WildekGround")	{if (tile < 6)	WildekGround.tilemap.setTile(column, row, 0);}
@@ -313,9 +282,14 @@ package	{
 			
 			var currWildek:World = FP.world;
 			
+			var magicLevel = h.Random((Player.magic) / 2, (Player.magic) * 1.5);
+			var swordLevel = h.Random((Player.sword) / 2, (Player.sword) * 1.5);
+			
 			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
-				["My Blade (LVL " + String(sword) + ") shall pierce it.", "My Magic skills (LVL " + String(magic) + ") shall destroy it."],
-			[function():void	{ FP.world = new BattleWorld(currWildek, 0) }, function():void	{ FP.world = new BattleWorld(currWildek, 1) } ]
+				["My level " + String(sword) + " shall pierce its level " + String(swordLevel) + " blade.",
+				"My level " + String(magic) + " magic shall destroy its level " + String(magicLevel) + " magic."],
+				[function():void	{ FP.world = new BattleWorld(currWildek, 0, swordLevel) },
+				function():void	{ FP.world = new BattleWorld(currWildek, 1, magicLevel) } ]
 			);
 			
 		}
@@ -324,9 +298,14 @@ package	{
 			
 			var currWildek:World = FP.world;
 			
+			var magicLevel = h.Random((Player.magic + 20) / 2, (Player.magic + 20) * 1.5);
+			var swordLevel = h.Random((Player.sword + 20) / 2, (Player.sword + 20) * 1.5);
+			
 			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
-				["My Blade (LVL " + String(sword) + ") shall pierce it.", "My Magic skills (LVL " + String(magic) + ") shall destroy it."],
-			[function():void	{ FP.world = new BattleWorld(currWildek, 0, 10) }, function():void	{ FP.world = new BattleWorld(currWildek, 1, 10) } ]
+				["My level " + String(sword) + " shall pierce its level " + String(swordLevel) + " blade.",
+				"My level " + String(magic) + " magic shall destroy its level " + String(magicLevel) + " magic."],
+				[function():void	{ FP.world = new BattleWorld(currWildek, 0, swordLevel) },
+				function():void	{ FP.world = new BattleWorld(currWildek, 1, magicLevel) } ]
 			);
 			
 		}

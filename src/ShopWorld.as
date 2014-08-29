@@ -13,13 +13,10 @@ package	{
 		
 		private static var instructions:String = 
 "             Welcome to the Shop.\n\
-This is where you will be able to buy things and\n\
-    regroup your thoughts after a long battle.\n\
-   You can buy things here, and upgrade skills.\n\
- You could probably treat this kind of like your\n\
-\"Home Base.\" WSAD or Arrow Keys to move. Maybe start\n\
- by walking into the Shop and getting yourself some\n\
- strength. All this traveling must have been hard !\n\
+Walk past the top or bottom of the screen to battle,\n\
+    or walk into that desk in the middle there.\n\
+     There you can buy upgrades to your states.\n\
+  You can also buy materials to sell in villages.\n\
                   Good Luck!";
 		
 		public function ShopWorld(x:Number = 370, y:Number = 450)	{
@@ -27,7 +24,7 @@ This is where you will be able to buy things and\n\
 			name = "Shop";
 			
 			add(new Ground);
-			for (var i:Number = 0; i < h.Random(20); i++)	{
+			for (var i:Number = 0; i < h.Random(20) * Player.luck; i++)	{
 				add(new Civilian);
 			}
 			add(new Player(x, y));
@@ -36,12 +33,6 @@ This is where you will be able to buy things and\n\
 			add(new MoneyCounter);
 			
 			instructions = "\n\n\n\n\n\n					 Good Luck!";
-			
-		}
-		
-		private function warnText():void	{
-			
-			FP.world.add(new text("Use the WSAD / Arrow Keys to walk into the shop.", 225, 275, 2));
 			
 		}
 		

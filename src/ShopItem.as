@@ -13,58 +13,69 @@ package
 	 */
 	public class ShopItem extends Entity	{
 		
-		public var levelFormula:Function;
+		private var index:uint;
 		
-		public var levelFormulaSet:Function;
+		private var item:Boolean;
 		
-		public var costFormula:Function;
+		private var addMoney:Boolean;
 		
-		public var renderOwned:Boolean;
+		private var positions:Array;
 		
-		public var addMoney:Boolean;
+		private var texts:Graphiclist;
 		
-		public var positions:Array;
+		private var itemCost:uint;
 		
-		public var texts:Graphiclist;
+		private var reference:Array;
 		
-		public function get level():Number	{
-			return levelFormula();
+		private function get cost():uint	{
+			if (item)
+			{
+				return itemCost;
+			}
+			else 
+			{
+				return int(Math.pow(reference[index], 2) + 74);	
+			}
 		}
 		
-		public function get cost():Number	{
-			return costFormula(level);
-		}
-		
-		public function get costString():String	{
+		private function get costString():String	{
 			return String(cost) + " GP";
 		}
 		
-		public function get ownedString():String	{
-			return String(level) + " Owned";
+		private function get ownedString():String	{
+			return String(reference[index]) + " Owned";
 		}
 		
-		public function get levelString():String	{
-			return "LVL " + String(level);
+		private function get levelString():String	{
+			return "LVL " + String(reference[index]);
 		}
 		
-		public function ShopItem(levelFunction:Function, levelFunctionSet:Function, costFunction:Function,
-			levelX:Number, levelY:Number, costX:Number, costY:Number, isItem:Boolean, sell:Boolean=false)	{
+		public function ShopItem(levelX:Number, levelY:Number, costX:Number, costY:Number,
+			elementIndex:uint, isItem:Boolean, sell:Boolean = false, ifItemCost:uint = 0)	{
 			
-			levelFormula = levelFunction;
-			levelFormulaSet = levelFunctionSet;
-			costFormula = costFunction;
-			renderOwned = isItem;
+			item = isItem;
+			addMoney = sell;
+			index = elementIndex;
 			
 			x = int((levelX) / 150) * 150;
 			y = int((levelY - 105) / 150) * 150 + 105;
 			setHitbox(150, 150);
 			positions = [levelX - x, levelY - y, costX - x, costY - y];
-			addMoney = sell;
+			
+			if (item)
+			{
+				reference = Player.items;
+				itemCost = ifItemCost;
+			}
+			else
+			{
+				reference = Player.upgrades;
+			}
 			
 			layer = -1;
 			
 			texts = new Graphiclist(new Text(costString, positions [2], positions [3]));
-			if (isItem)	texts.add(new Text(ownedString, positions [0], positions [1]));
+			if (item)	texts.add(new Text(ownedString, positions [0], positions [1]));
 			else	texts.add(new Text(levelString, positions [0], positions [1]));
 			
 			graphic = texts;
@@ -87,9 +98,9 @@ package
 						
 						if (addMoney)	{
 							
-							if (level > 0)	{
-								Player.money += cost * level;
-								levelFormulaSet (0);
+							if (reference[index] > 0)	{
+								Player.money += cost * reference[index];
+								reference[index] = 0;
 							}
 							else	{
 								FP.world.add(new text("Bud, you don't got none!", 10, 10, 2));
@@ -99,7 +110,7 @@ package
 						else	{
 							
 							if (Player.money > cost)	{
-								levelFormulaSet (level + int(Player.money / cost));
+								reference[index] += int(Player.money / cost);
 								Player.money %= cost;
 							}
 							else	{
@@ -114,8 +125,8 @@ package
 						
 						if (addMoney)	{
 							
-							if (level > 0)	{
-								levelFormulaSet (level - 1);
+							if (reference[index] > 0)	{
+								reference[index] -= 1;
 								Player.money += cost;
 							}
 							else	{
@@ -125,10 +136,9 @@ package
 						}
 						else	{
 							
-							if (Player.money > cost)	{
+							if (Player.money >= cost)	{
 								Player.money -= cost;
-								levelFormulaSet (level + 1);
-								trace(level);
+								reference[index] += 1;
 							}
 							else	{
 								FP.world.add(new text("Bud, you don't got the Gold!", 10, 10, 2));
@@ -140,12 +150,12 @@ package
 					
 				}
 				
-				texts.removeAll();
-				texts.add(new Text(costString, positions [2], positions [3]));
-				if (renderOwned)	texts.add(new Text(ownedString, positions [0], positions [1]));
-				else	texts.add(new Text(levelString, positions [0], positions [1]));
-				
 			}
+			
+			texts.removeAll();
+			texts.add(new Text(costString, positions [2], positions [3]));
+			if (item)	texts.add(new Text(ownedString, positions [0], positions [1]));
+			else	texts.add(new Text(levelString, positions [0], positions [1]));
 			
 		}
 		

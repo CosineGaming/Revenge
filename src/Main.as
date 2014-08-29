@@ -13,7 +13,7 @@ package	{
 		
 		public function Main()	{
 			
-			super(800, 595, 40);
+			super(800, 595, 48);
 			
 		}
 		

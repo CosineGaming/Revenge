@@ -32,7 +32,7 @@ package	{
 		
 		private var dieValue:Number = -1;
 		
-		public function Die(storeWorld:World, _small:Boolean = false, _x:Number = 325, _y:Number = 225, isEnemy:Boolean = false, level:Number = 0, stakesMultiplier:Number = 1)	{
+		public function Die(storeWorld:World, _small:Boolean = false, _x:Number = 325, _y:Number = 225, isEnemy:Boolean = false, level:Boolean = false, stakesMultiplier:Number = 1)	{
 			
 			x = _x;
 			y = _y;
@@ -46,7 +46,7 @@ package	{
 			dispText = !small;
 			enemy = isEnemy;
 			PlayerLevel = Player.upgrades[level];
-			LevelType = level;
+			LevelType = uint(level);
 			StakesMultiplier = stakesMultiplier;
 			
 			if (dispText)	toGoTo = h.Random(3, 5);

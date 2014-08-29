@@ -42,23 +42,19 @@ package
 			
 		}
 		
-		public static function nothing():void	{
-			// Do nothing
-		}
-		
 		public static function print(INtext:String):void	{
 			FP.world.add(new text(INtext, Player.statX, Player.statY, 1));
 		}
 		
 		public static var currSound:Sfx;
 		
-		public static function playRand(type:String, numPoss:Number, loop:Boolean=false, display:Boolean=false):void	{
+		public static function playRand(type:String, numPoss:Number, loop:Boolean=true, display:Boolean=false):void	{
 			
 			play(type + "/" + String(Random(1, numPoss + 1)) + ".mp3", loop, display);
 			
 		}
 		
-		public static function play(soundPath:String, loop:Boolean=false, display:Boolean=false):void	{
+		public static function play(soundPath:String, loop:Boolean=true, display:Boolean=false):void	{
 			
 			var sound:Sfx = Loaded.loaded[soundPath];
 			
@@ -78,17 +74,11 @@ package
 			else	{
 				var fader:SfxFader;
 				if (currSound)	{
-					fader = new SfxFader(currSound);
-					fader.crossFade(sound, loop, 1);
+					currSound.stop();
 				}
-				else 	{
-					sound.volume = 0;
-					if (loop)	sound.loop();
-					else	sound.play();
-					fader = new SfxFader(sound);
-					fader.fadeTo(1, 1);
-					currSound = sound;
-				}
+				currSound = sound;
+				if (loop)	currSound.loop();
+				else	currSound.play();
 			}
 			
 		}

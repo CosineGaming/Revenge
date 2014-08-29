@@ -51,7 +51,7 @@ package	{
 				if (Input.mousePressed && hit != null) {
 					hit();
 					if (sound)	{
-						h.play("other/MenuClick.mp3");
+						h.play("other/MenuClick.mp3", false);
 					}
 				}
 				else if (mouseOver != null)	mouseOver();
