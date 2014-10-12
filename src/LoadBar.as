@@ -11,8 +11,6 @@ package
 	public class LoadBar extends Entity	{
 		
 		[Embed(source = "../assets/LoadBar.png")] private const BAR:Class;
-		
-		private var Rect:Rectangle = new Rectangle(0, 0, 0, 30);
 		private var Bar:Image = new Image(BAR);
 		
 		public function LoadBar()	{
@@ -26,8 +24,8 @@ package
 		
 		override public function update():void	{
 			
-			Rect.width = Number((numLoaded + 0.0) / LoadWorld.toLoad.length) * 700.0;
-			Bar = new Image(BAR, Rect);
+			Bar.clipRect.width = Number((numLoaded + 0.0) / LoadWorld.toLoad.length) * 700.0;
+			Bar.updateBuffer(true);
 			
 		}
 		

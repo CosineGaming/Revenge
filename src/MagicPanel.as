@@ -67,32 +67,28 @@ package
 		
 		private function fire():void
 		{
-			if (mana >= list[0] % 100)
+			if (other.list.length)
 			{
-				mana -= list[0] % 100;
-				if (other.list.length)
+				if (Math.abs(list[0] - other.list[0]) == 100)
 				{
-					if (Math.abs(list[0] - other.list[0]) == 100)
-					{
-						// One defends against the other
-						other.list.shift();
-					}
-					else if (list[0] < 100)
-					{
-						// Attacking
-						other.health -= list[0];
-					}
+					// One defends against the other
+					other.list.shift();
 				}
-				else
+				else if (list[0] < 100)
 				{
-					if (list[0] < 100)
-					{
-						// Attacking against nothing
-						other.health -= list[0];
-					}
+					// Attacking
+					other.health -= list[0];
 				}
-				list.shift();
 			}
+			else
+			{
+				if (list[0] < 100)
+				{
+					// Attacking against nothing
+					other.health -= list[0];
+				}
+			}
+			list.shift();
 		}
 		
 		override public function update():void
@@ -114,8 +110,8 @@ package
 				graphics.add(new Text(String(list[i] % 100), 5, 55 + i * 50, settings));
 			}
 			
-			health += level * 2 / 40.0 * FP.elapsed;
-			mana += level * 2 / 25.0 * FP.elapsed;
+			health += 1 * FP.elapsed;
+			mana += 2 * FP.elapsed;
 			if (health > level * 2)
 			{
 				health = level * 2
@@ -132,17 +128,17 @@ package
 				if (enemyCountdown <= 0)
 				{
 					enemyCountdown = h.Random(1, 26) / 20.0;
-					var maxSpell = uint(Math.sqrt(level));
+					var maxSpell:uint = uint(Math.sqrt(level));
 					if (list.length == 0)
 					{
 						// We're empty
 						if (other.list.length)
 						{
 							// They have something prepared for us
-							if (other.list.length && other.list[0] <= maxSpell * 2)
+							if (other.list.length && other.list[0] <= maxSpell + 1)
 							{
 								// Defend against them
-								list.push(other.list[0] + 100);
+								MagicSpells.cast(other.list[0], true, maxSpell, this);
 							}
 							else 
 							{
@@ -154,13 +150,13 @@ package
 									// This one's defended, choose next best one
 									spell -= 1;
 								}
-								list.push(spell);
+								MagicSpells.cast(spell, false, maxSpell, this);
 							}
 						}
 						else 
 						{
 							// They're not prepared. Give 'em hell, boys!
-							list.push(maxSpell);
+							MagicSpells.cast(maxSpell, false, maxSpell, this);
 						}
 					}
 					else 
@@ -186,12 +182,12 @@ package
 									if (noAggressive && other.list[list.length] < 100)
 									{
 										// Defend against them, keep our queue matched with theirs
-										list.push(other.list[list.length] + 100);
+										MagicSpells.cast(other.list[list.length], true, maxSpell, this);
 									}
 									else 
 									{
 										// Our queues disconnet at some point, queue aggressively.
-										list.push(maxSpell);
+										MagicSpells.cast(maxSpell, false, maxSpell, this);
 									}
 								}
 							}

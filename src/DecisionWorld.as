@@ -24,7 +24,8 @@ package	{
 		
 		public function DecisionWorld(_AskText:String, _Options:Array, _Consequences:Array)	{
 			
-			var sound:String = String(h.Random(1, 3));
+			oldArrow = new Entity(75, 250, arrowImg);
+			add(oldArrow);
 			
 			AskText = _AskText;
 			Options = _Options;
@@ -34,9 +35,7 @@ package	{
 		
 		private function mouseOver():void	{
 			
-			if (oldArrow)	remove(oldArrow);
-			oldArrow = new Entity(75, int((Input.mouseY - 250) / 100) * 100 + 250, arrowImg);
-			add(oldArrow);
+			oldArrow.y = int((Input.mouseY - 250) / 100) * 100 + 250;
 			
 		}
 		
@@ -53,22 +52,6 @@ package	{
 				var consequence:Button = new Button(120, i * 100 + 250, option.TEXT.width, option.TEXT.height, Consequences[i], mouseOver);
 				add(consequence);
 				addedList.push(option, consequence);
-				
-			}
-			
-		}
-		
-		override public function end():void	{
-			
-			if (oldArrow)	{
-				
-				remove(oldArrow);
-				
-			}
-			
-			for (var i:Number = 0; i < addedList.length; i++)	{
-				
-				remove(addedList[i]);
 				
 			}
 			

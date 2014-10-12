@@ -222,15 +222,15 @@ package	{
 							}
 							else if (tile == 2)	{
 								if (h.Random(4 * luck) == 1)	{
-									FP.world.add(new text("Whatcha doin' on my orb grass?", x, y + 25, 1, null, battle));
+									FP.world.add(new text("Whatcha doin' on my orb grass?", x, y + 25, 1, null, hit == "WildekGround" ? function():void { battle(0, FP.world) } : function():void { battle(10, FP.world) } ));
 								}
-								var upgradeVal:Number = h.Random(2 * luck);
+								var upgradeVal:Number = h.Random(2 * luck + (6 * uint(hit == "DungeonikeGround")));
 								var upgradeIndex:Number = h.Random(2);
 								upgrades[upgradeIndex] += upgradeVal;
 								FP.world.add(new text(["Weapon", "Magic"][upgradeIndex] + " upgraded by " + String(upgradeVal) + " to " + String(upgrades[upgradeIndex]), x, y, 1));
 							}
 							else if (tile == 3)	{
-								FP.world.add(new text("Grrr...", x, y, 1, null, hit == "WildekGround" ? battle : battleDungeonike));
+								FP.world.add(new text("Grrr...", x, y, 1, null, hit == "WildekGround" ? function():void { battle(0, FP.world) } : function():void { battle(10, FP.world) }));
 							}
 							else if (tile == 4)	{
 								var moneyVal:Number = h.Random(150 * Player.luck);
@@ -239,13 +239,9 @@ package	{
 							}
 							else if (tile == 5)	{
 								var gotoWorld:World = FP.world;
-								var downfallWorld:World = new DecisionWorld("By what means would you like to destroy the peoples before you?",
-									["My Blade (LVL " + String(sword) + ") shall pierce them.", "My Magic skills (LVL " + String(magic) + ") shall crush them."],
-									[function():void	{ FP.world = new BattleWorld(gotoWorld, 0, 5) }, function():void	{ FP.world = new BattleWorld(gotoWorld, 1, 5) } ]
-								);
 								FP.world = new DecisionWorld("What are your intentions?", 
 									["I wish to trade and make peace.", "I wish to see your downfall"], 
-									[function():void {	FP.world = new ShopGUI(gotoWorld, true);	}, function():void { FP.world = downfallWorld } ]);
+									[function():void {	FP.world = new ShopGUI(gotoWorld, true);	}, function():void { battle(10, gotoWorld) } ]);
 							}
 							
 							if (hit == "WildekGround")	{if (tile < 6)	WildekGround.tilemap.setTile(column, row, 0);}
@@ -278,34 +274,16 @@ package	{
 			
 		}
 		
-		private function battle():void	{
+		private function battle(stakes:uint, back:World):void	{
 			
-			var currWildek:World = FP.world;
-			
-			var magicLevel = h.Random((Player.magic) / 2, (Player.magic) * 1.5);
-			var swordLevel = h.Random((Player.sword) / 2, (Player.sword) * 1.5);
+			var magicLevel:uint = h.Random(Player.luck * (Player.magic + stakes) * 0.5, Player.luck * (Player.magic + stakes) * 1.5);
+			var swordLevel:uint = h.Random(Player.luck * (Player.sword + stakes) * 0.5, Player.luck * (Player.sword + stakes) * 1.5);
 			
 			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
 				["My level " + String(sword) + " shall pierce its level " + String(swordLevel) + " blade.",
 				"My level " + String(magic) + " magic shall destroy its level " + String(magicLevel) + " magic."],
-				[function():void	{ FP.world = new BattleWorld(currWildek, 0, swordLevel) },
-				function():void	{ FP.world = new BattleWorld(currWildek, 1, magicLevel) } ]
-			);
-			
-		}
-		
-		private function battleDungeonike():void	{
-			
-			var currWildek:World = FP.world;
-			
-			var magicLevel = h.Random((Player.magic + 20) / 2, (Player.magic + 20) * 1.5);
-			var swordLevel = h.Random((Player.sword + 20) / 2, (Player.sword + 20) * 1.5);
-			
-			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
-				["My level " + String(sword) + " shall pierce its level " + String(swordLevel) + " blade.",
-				"My level " + String(magic) + " magic shall destroy its level " + String(magicLevel) + " magic."],
-				[function():void	{ FP.world = new BattleWorld(currWildek, 0, swordLevel) },
-				function():void	{ FP.world = new BattleWorld(currWildek, 1, magicLevel) } ]
+				[function():void	{ FP.world = new BattleWorld(back, 0, swordLevel) },
+				function():void	{ FP.world = new BattleWorld(back, 1, magicLevel) } ]
 			);
 			
 		}

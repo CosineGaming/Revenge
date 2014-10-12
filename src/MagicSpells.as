@@ -42,7 +42,7 @@ package
 				graphics.add(new Text(display, 5 + i * 50, 5, settings));
 			}
 			settings.color = 0x00FF00;
-			for (var i:uint = 0; i < numSpells * 2; ++i)
+			for (var i:uint = 0; i < numSpells + 1; ++i)
 			{
 				var display:String = String(i + 1);
 				graphics.add(new Text(display, 5 + i * 50, 55, settings));
@@ -52,29 +52,43 @@ package
 			
 		}
 		
+		public static function cast(spell:uint, defense:Boolean, maxSpell:uint, onPanel:MagicPanel):void
+		{
+			if (spell > 0 && ((spell <= maxSpell && defense == 0) || (spell <= maxSpell + 1 && defense == 1)))
+			{
+				if (!defense)
+				{
+					if (onPanel.mana >= spell)
+					{
+						onPanel.mana -= spell;
+					}
+					else
+					{
+						return;
+					}
+				}
+				onPanel.list.push(spell + uint(defense) * 100); // Attack: 2, Defense: 102
+			}
+		}
+		
 		override public function update():void
 		{
 			if (Input.mousePressed)
 			{
-				var spell:int = int((Input.mouseX - 50) / 50);
+				var spell:int = int((Input.mouseX - 50) / 50) + 1;
 				var defense:int = int((Input.mouseY - 500) / 50);
-				if (spell >= 0 && ((spell < numSpells && defense == 0) || (spell < numSpells * 2 && defense == 1)))
-				{
-					// Right area
-					spell += 1;
-					panel.list.push(spell + defense * 100); // Attack: 2, Defense: 102
-				}
+				cast(spell, defense, numSpells, panel);
 			}
-			if (Input.pressed(Key.DIGIT_1))	panel.list.push(1 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_2))	panel.list.push(2 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_3))	panel.list.push(3 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_4))	panel.list.push(4 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_5))	panel.list.push(5 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_6))	panel.list.push(6 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_7))	panel.list.push(7 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_8))	panel.list.push(8 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_9))	panel.list.push(9 + uint(Input.check(Key.SHIFT)) * 100);
-			if (Input.pressed(Key.DIGIT_0))	panel.list.push(10 + uint(Input.check(Key.SHIFT)) * 100);
+			if (Input.pressed(Key.DIGIT_1))	cast(1, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_2))	cast(2, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_3))	cast(3, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_4))	cast(4, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_5))	cast(5, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_6))	cast(6, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_7))	cast(7, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_8))	cast(8, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_9))	cast(9, Input.check(Key.SHIFT), numSpells, panel);
+			if (Input.pressed(Key.DIGIT_0))	cast(10, Input.check(Key.SHIFT), numSpells, panel);
 		}
 	}
 	

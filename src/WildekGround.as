@@ -43,8 +43,8 @@ package	{
 				if (mountainRange)	{
 					for (var b:Number = 0; b < h.Random(8 * Player.luck); b++)	{
 						tilemap.setTile(column, row, h.Random(6, 8));
-						column += h.Random(-1, 2);
-						row += h.Random(-1, 2);
+						column += h.Random(0, 2) * 2 - 1; // Move left or right 1
+						row += h.Random(0, 2) * 2 - 1; // Move up or down 1
 					}
 				}
 				else	{
@@ -52,24 +52,26 @@ package	{
 				}
 			}
 			
-			for (i = 0; i < h.Random(1000 * Player.luck); i++)	{ // Add evil orb and gold grass along with villages around the edges
-				column = h.Random(3, 77);
-				row = h.Random(3, 57);
-				var tile:Number;
-				if (h.Random(0, 6) != 0)	tile = h.Random(2, 5); // Not a village
-				else	tile = h.Random(2, 6);
-				tilemap.setTile(column, row, tile);
+			for (i = 0; i < h.Random(1000 * Player.luck); i++)	{ // Add evil, orb, gold, and village grass
+				tilemap.setTile(h.Random(0, 81), h.Random(0, 61), h.Random(2, 6));
 			}
 			tilemap.setTile(40, 30, 1); // Add Back to Shop tile
 			
-			var canBeLake:Boolean = h.Random(0, 8) == 0; // Lay Mountains / Lakes preventing exit of Wildek
 			for (i = 3; i < 77; i++)	{
-				tilemap.setTile(i, 3, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
-				tilemap.setTile(i, 56, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+				var max:uint = h.Random(1, 5);
+				for (var upto:int = h.Random(-3, 1); upto < max; ++upto)
+				{
+					tilemap.setTile(i, 3 + upto, h.Random(6, 9));
+					tilemap.setTile(i, 56 + upto, h.Random(6, 9));
+				}
 			}
 			for (i = 3; i < 57; i++)	{
-				tilemap.setTile(3, i, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
-				tilemap.setTile(76, i, canBeLake ? h.Random(6, 9) : h.Random(6, 8));
+				var max:uint = h.Random(0, 4);
+				for (var upto:int = h.Random(-3, 1); upto < max; ++upto)
+				{
+					tilemap.setTile(3 + upto, i, h.Random(6, 9));
+					tilemap.setTile(76 + upto, i, h.Random(6, 9));
+				}
 			}
 			tilemap.setTile(39, 3, 9); // Add Gate out of Wildek
 			

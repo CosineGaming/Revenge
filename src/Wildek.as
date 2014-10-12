@@ -30,7 +30,7 @@ Begin by walking around and looking for anything interesting.\n\
 			add(new text(instructions, 3800, 2800, 7));
 			add(new HomeMarker);
 			
-			for (var i:Number = 0; i < h.Random(10); i++)	{
+			for (var i:Number = 0; i < h.Random(20 * Player.luck); i++)	{
 				add(new Civilian(0, 8000, 6000));
 			}
 			

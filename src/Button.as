@@ -13,22 +13,20 @@ package	{
 	
 	public class Button extends Entity	{
 		
-		[Embed(source = "../assets/Blank.png")] private const BLANK:Class;
-		
 		private var hit:Function;
 		private var mouseOver:Function;
 		
 		private var sound:Boolean;
 		
-		public function Button(INx:Number, INy:Number, INwidth:Number = -1, INheight:Number = -1, onClick:Function = null, onMouseOver:Function = null, INimg:Class = null, clipRect:Rectangle = null, INtype:String = "Button", doSound:Boolean = true)	{
+		public function Button(INx:Number, INy:Number, INwidth:Number = -1, INheight:Number = -1, onClick:Function = null, onMouseOver:Function = null, doSound:Boolean = true, INtype:String = "Button", INimg:Class = null, clipRect:Rectangle = null)	{
 			
-			if (!INimg)	INimg = BLANK;
-			var BUTTON:Class = INimg;
+			var buttonImage:Image;
+			if (INimg)
+			{
+				buttonImage = new Image(INimg);
+				graphic = buttonImage;
+			}
 			
-			if (!clipRect) clipRect = new Rectangle();
-			var ImgBUTTON:Image = new Image(BUTTON, clipRect);
-			
-			graphic = ImgBUTTON;
 			type = INtype;
 			
 			hit = onClick;
@@ -38,23 +36,21 @@ package	{
 			
 			x = INx;
 			y = INy;
-			if (INimg != BLANK)	setHitbox(ImgBUTTON.width, ImgBUTTON.height);
+			if (INimg != null)	setHitbox(buttonImage.width, buttonImage.height);
 			else	setHitbox(INwidth, INheight);
 			
 		}
 		
 		override public function update():void	{
 			
-			var mouse:Entity = new Entity(Input.mouseX, Input.mouseY);
-			
-			if (mouse.collideWith(this, mouse.x, mouse.y))	{
+			if (collidePoint(x, y, Input.mouseX, Input.mouseY))	{
 				if (Input.mousePressed && hit != null) {
 					hit();
 					if (sound)	{
 						h.play("other/MenuClick.mp3", false);
 					}
 				}
-				else if (mouseOver != null)	mouseOver();
+				if (mouseOver != null)	mouseOver();
 			}
 			
 		}
