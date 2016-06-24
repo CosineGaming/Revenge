@@ -51,19 +51,19 @@ package {
 				add(bg);
 				var player:Object = new Object;
 				var enemy:Object = new Object;
-				player.sword = new SwordHealth(true, enemy);
-				enemy.sword = new SwordHealth(false, player);
+				player.sword = new SwordHealth(enemy, true, storeWorld);
+				enemy.sword = new SwordHealth(player, false, storeWorld, enemyLevel);
 				add(player.sword);
 				add(enemy.sword);
-				const size:uint = 250;
+				const size:uint = 150;
 				const padding:uint = 10;
 				const originX:uint = 20;
 				const originY:uint = 265;
 				for (var gridX:uint = 0; gridX < 2; gridX++)
 					for (var gridY:uint = 0; gridY < 2; gridY++)
 						add(new Button(gridX * (size + padding) + originX, gridY * (size + padding) + originY,
-							size, size, function():void { player.sword.turn(gridX, gridY); }, null, false));
-				add(new Button(400, 295, 240, 240, function():void { player.sword.endTurn(); }, null, false));
+							size, size, turn(player, gridX, gridY), null, false));
+				add(new Button(400, 295, 240, 240, function():void { player.sword.endTurn(); trace("ENDTURN"); }, null, false));
 				
 			}
 			
@@ -71,6 +71,13 @@ package {
 			add(new Die(storeWorld, false, 325, 225, false, magic, stakes));
 			add(new Die(storeWorld, true, 675, 265, true, magic));*/
 			
+		}
+		
+		private function turn(player:Object, x:uint, y:uint):Function	{
+			return function():void	{
+				player.sword.turn(x, y);
+				trace("TURN: ", x, ", ", y);
+			};
 		}
 		
 		override public function begin():void	{

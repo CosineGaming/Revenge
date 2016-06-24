@@ -280,7 +280,7 @@ package	{
 			var swordLevel:uint = h.Random(Player.luck * (Player.sword + stakes) * 0.5, Player.luck * (Player.sword + stakes) * 1.5);
 			
 			FP.world = new DecisionWorld("By what means would you like to crush the dreadful enemy before you?",
-				["My level " + String(sword) + " shall pierce its level " + String(swordLevel) + " blade.",
+				["My level " + String(sword) + " blade shall pierce its level " + String(swordLevel) + " blade.",
 				"My level " + String(magic) + " magic shall destroy its level " + String(magicLevel) + " magic."],
 				[function():void	{ FP.world = new BattleWorld(back, 0, swordLevel) },
 				function():void	{ FP.world = new BattleWorld(back, 1, magicLevel) } ]
