@@ -178,7 +178,7 @@ package	{
 									"You look sad. You need something?", "TAKE THIS!", "You want this?", "Money for the rich? :)", "That's a mighty scar you got there!\nDo tell...",
 									"I once was an adventurer like you,\n but then I took an arrow, to the knee.", "Adventurers, Pff...",
 									"Go find something better to do with your life.", "Also try Minecraft!", ".\n..\n...\n....\n.....\n......",
-									"* No Comment *", " ", "Don't go there.", "RAPE!", "You should learn C++.", "Made in Flash with Flashpunk!",
+									"* No Comment *", " ", "Don't go there.", "You should learn C++.", "Made in Flash with Flashpunk!",
 									"Thanks to Incompetech.com for music!", "By Cosine Gaming", "Revenge", "Revenge by Cosine Gaming", "Visit cosinegaming.com", "cosinegaming.com",
 									"You should go to cosinegaming.com", "Cosine Gaming makes free indy games.", "Go to cosinegaming.com for more free indy games.",
 									"By Cosine Gaming", "Revenge", "Revenge by Cosine Gaming", "Visit cosinegaming.com", "cosinegaming.com",

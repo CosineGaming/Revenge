@@ -59,10 +59,9 @@ package {
 				const padding:uint = 10;
 				const originX:uint = 20;
 				const originY:uint = 265;
-				for (var gridX:uint = 0; gridX < 2; gridX++)
-					for (var gridY:uint = 0; gridY < 2; gridY++)
-						add(new Button(gridX * (size + padding) + originX, gridY * (size + padding) + originY,
-							size, size, turn(player, gridX, gridY), null, false));
+				add(new Button(originX             , originY             , size, size  , turn(player, 0), null, false));
+				add(new Button(originX             , originY+size+padding, size, size  , turn(player, 1), null, false));
+				add(new Button(originX+size+padding, originY             , size, size*2, turn(player, 2), null, false));
 				add(new Button(400, 295, 240, 240, function():void { player.sword.endTurn(); trace("ENDTURN"); }, null, false));
 				
 			}
@@ -73,10 +72,10 @@ package {
 			
 		}
 		
-		private function turn(player:Object, x:uint, y:uint):Function	{
+		private function turn(player:Object, move:uint):Function	{
 			return function():void	{
-				player.sword.turn(x, y);
-				trace("TURN: ", x, ", ", y);
+				player.sword.turn(move);
+				trace("TURN: ", move);
 			};
 		}
 		

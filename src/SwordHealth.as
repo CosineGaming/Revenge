@@ -19,7 +19,7 @@ package
 		
 		public var level:uint;
 		
-		public var move:Array;
+		public var move:Number;
 		
 		private var player:Boolean;
 		
@@ -32,81 +32,87 @@ package
 		
 		private var oldText:text;
 		
-		public function turn(fromLeft:uint, fromTop:uint):void {
+		public function turn(moveType:uint):void {
 			
-			move = [fromLeft, fromTop];
+			move = moveType;
 			
 			// Enemy's AI:
-			other.move = [h.Random(0, 2), h.Random(0, 2)]; // IDIOT for now, later I'll implement legits
+			other.move = h.Random(0, 3); // IDIOT for now, later I'll implement legits (TODO)
 			
 		}
 		
 		public function endTurn():Boolean {
 			
 			var description:String = "";
-			if (move[0] == 0)
+			var power:uint = h.Random(1, level + 1);
+			if (move == 0)
 			{
-				// Aggressive move
-				var type:uint = move[1];
-				if (type == 0)
+				// Stab
+				if (other.move == 2)
 				{
-					// Stab
-					if (other.move[0] == 1 && other.move[1] == 0)
+					// Blocked... probably
+					if (player)
 					{
-						// Blocked... probably
-						if (player)
-						{
-							description = "You stab the enemy, but he is prepared for you!\nHe dodges, rendering your attack useless!";
-						}
-						else 
-						{
-							description = "The enemy stabs toward you, but you saw it coming!\nYou dodge him, predicting his actions!";
-						}
+						description = "You stab the enemy, but he is prepared for you!\nHe dodges, rendering your attack useless!";
 					}
 					else 
 					{
-						// Goes through
-						other.health -= 1;
-						if (player)
-						{
-							description = "You stab the unsuspecting enemy and deal 1 damage!";
-						}
-						else 
-						{
-							description = "The enemy stabs you as you look elsewhere and deals 1 damage!";
-						}
+						description = "The enemy stabs toward you, but you saw it coming!\nYou dodge him, predicting his actions!";
 					}
 				}
-				else
+				else 
 				{
-					// Swing
-					if (other.move[0] == 1 && other.move[1] == 1)
+					// Goes through
+					other.health -= power;
+					if (player)
 					{
-						// Blocked... probably
-						if (player)
-						{
-							description = "Though you swing at the enemy, he has a powerful parry!\nAll that happens is a loud clang of metal!";
-						}
-						else
-						{
-							description = "The enemy swings at you, but you parry powerfully!\nA loud clang rings in the air and both swords seperate!";
-						}
+						description = "You stab the unsuspecting enemy and deal " + String(power) + " damage!";
 					}
-					else
+					else 
 					{
-						// Goes through
-						other.health -= 2;
-						if (player)
-						{
-							description = "You swing at the enemy with utter power and deal 2 damage!";
-						}
-						else 
-						{
-							description = "The enemy swings at you too quickly for you to notice!\nHe swings right into your ribs and deals 2 damage!";
-						}
+						description = "The enemy stabs you as you look elsewhere and deals " + String(power) + " damage!";
 					}
 				}
 			}
+			else if (move == 1)
+			{
+				// Swing
+				if (other.move == 2)
+				{
+					// Blocked... probably
+					if (player)
+					{
+						description = "Though you swing at the enemy, he quickly flits away!\nYou merely lose your balance!";
+					}
+					else
+					{
+						description = "The enemy swings at you, but you duck it expertly!\nYou hear wooshing over your head!";
+					}
+				}
+				else if (other.move == 1)
+				{
+					// Blocked... probably
+					if (player)
+					{
+						description = "You both slash at each other, creating a strong perry! A loud clang of metal rings in the air!";
+					}
+					// Merely need to describe once as both perry in this situation
+				}
+				else
+				{
+					// Goes through
+					other.health -= power * 2;
+					if (player)
+					{
+						description = "You swing at the enemy with utter power and deal " + String(power) + " damage!";
+					}
+					else 
+					{
+						description = "The enemy swings at you too quickly for you to notice!\nHe swings right into your ribs and deals " + String(power) + " damage!";
+					}
+				}
+			}
+			// Only deal with aggressive moves
 			
 			if (oldText)
 			{
@@ -125,6 +131,7 @@ package
 				killed = other.endTurn();
 			}
 			
+			// TODO: If killed, then what?
 			if (health <= 0 && !killed)
 			{
 				var target:uint = Math.sqrt(other.level) * 225;
@@ -161,8 +168,7 @@ package
 				{
 					words += "\nYou now have " + String(Player.money) + " Gold.";
 				}
-				FP.world.add(new text(words, 100, 100, 4, finish));
-				FP.world.remove(other);
+				FP.world.add(new text(words, 100, 100, 8, finish));
 				return true;
 			}
 			
@@ -170,7 +176,7 @@ package
 			
 		}
 		
-		public function SwordHealth(otherRef:Object, isPlayer:Boolean, isStamina:Boolean, finishTo:World, customLevel:uint=0) {
+		public function SwordHealth(otherRef:Object, isPlayer:Boolean, finishTo:World, customLevel:uint=0) {
 			
 			player = isPlayer;
 			
@@ -204,7 +210,7 @@ package
 		
 		override public function update():void {
 			
-			bar.clipRect.right = health / level / 2 * 200;
+			bar.clipRect.right = health * 200 / level / 2;
 			bar.updateBuffer(true);
 			
 		}
